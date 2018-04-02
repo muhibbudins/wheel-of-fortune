@@ -14,6 +14,12 @@ By default rotation origin of element on browser is like image above, so you can
 
 If you create piece of wheel like image above, you can set the angle with **60** and from **0** because the piece location start on *0 degrees*.
 
+### Set Winner Position
+
+To set position of winner on center of pointer so i use this formula :
+
+> (360 - (Piece From + Piece Angle)) + (Piece Angle / 2) - 90
+
 ### Documentation
 
 ```js
