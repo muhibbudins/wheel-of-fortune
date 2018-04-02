@@ -1,5 +1,20 @@
 # Wheel Of Fortune
-Simple wheel of fortune with specific angle, build with ES6, Webpack and SASS
+
+This project will help you to create Wheel Of Fortune with specific angle and custom design, you can focus on creating wheel design and set a gift defining **Angle Size** and **From Angle**.
+
+### Note of Rotation
+
+![Rotation](example/assets/rotation.png)
+
+By default rotation origin of element on browser is like image above, so you can define a piece of wheel like example below.
+
+### Piece example
+
+![Example](example/assets/example.png)
+
+If you create piece of wheel like image above, you can set the angle with **60** and from **0** because the piece location start on *0 degrees*.
+
+### Documentation
 
 ```js
   const WOF = new WheelOfFortune({
