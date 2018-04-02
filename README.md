@@ -20,6 +20,10 @@ To set position of winner on center of pointer so i use this formula :
 
 > (360 - (Piece From + Piece Angle)) + (Piece Angle / 2) - 90
 
+### Image Support
+
+You can use JPG / PNG / SVG image to show a wheel, i use [svg.js](http://svgjs.com/) to load SVG image to wrapper.
+
 ### Documentation
 
 ```js
