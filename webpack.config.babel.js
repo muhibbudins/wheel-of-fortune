@@ -12,9 +12,14 @@ export default () => (
     },
     externals: {},
     module: {
-      rules: [
-        {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"}
-      ]
+      rules: [{
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: "babel-loader"
+      }, {
+        test:/\.(s*)css$/,
+        use: ['style-loader','css-loader', 'sass-loader']
+      }]
     },
   }
 );

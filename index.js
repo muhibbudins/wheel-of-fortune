@@ -1,17 +1,41 @@
 import axios from 'axios'
 import svg from 'svg.js'
 import $ from 'domtastic'
+import _ from 'lodash'
+import './index.scss'
 
+/**
+ * Wheel Of Fortune
+ * Simple wheel of fortune with specific angle, build with ES6, Webpack and SASS 
+ * 
+ * @version 1.0
+ * @author Muhibbudin Suretno <muhibbudinsuretno1@gmail.com>
+ * @license MIT
+ * 
+ * https://github.com/muhibbudins/wheel-of-fortune 
+ */
 export default class WheelOfFortune {
+  /**
+   * Create base configuration
+   * @param {Object} config 
+   */
   constructor (config) {
+    /**
+     * Set wheel image
+     */
     if (!config.wheel) throw Error('Source of wheel must be defined')
     this.image = config.wheel
 
+    /**
+     * Set configuration of pieces
+     */
     if (!config.pieces) throw Error('Pieces of wheel must be defined')
     this.pieces = config.pieces
 
+    /**
+     * 
+     */
     this.selector = $('#wheel')
-    this.draw = svg(this.selector[0])
     this.source = null
     this.degree = 7200
     this.clicked = 0
@@ -20,18 +44,40 @@ export default class WheelOfFortune {
     this._isAnimating = false
     this._isEnded = false
 
-    this.init()
+    this.initialize()
   }
 
   /**
    * Initialize Wheel
    */
+  initialize () {
+    if (this.image.indexOf('svg') > -1) {
+      axios.get(this.image).then(({ data }) => {
+        this.source = data
+        this.svg = svg(this.selector[0])
 
-  placeImage () {
-    this.draw.svg(this.source)
+        this.drawSVG()
+      })
+    } else {
+      this.drawImage(this.image)
+    }
   }
 
-  inject (maximumDegree) {
+  drawSVG () {
+    this.svg.svg(this.source)
+  }
+
+  drawImage (source) {
+    let image = document.createElement('img')
+    image.src = source
+
+    this.selector.append(image)
+  }
+
+  /**
+   * Setter
+   */
+  setKeyframe (maximumDegree) {
     var styleEl = document.createElement('style'),
         styleSheet;
   
@@ -55,50 +101,37 @@ export default class WheelOfFortune {
     }
   }
 
-  init () {
-    axios.get(this.image).then(({ data }) => {
-      this.source = data
-      
-      this.placeImage()
-    })
-  }
-
   /**
-   * Getting gift
+   * Getter
    */
+  getWinner () {
+    let sorted = _.orderBy(this.pieces, 'angle', 'desc')
+    let list = Array.from(this.pieces.map(item => item.angle)).sort().reverse()
+    let index = Math.floor(Math.random() * list.length)
 
-  random () {
-    let min = 0
-    let max = this.pieces.length - 1
-
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return sorted[index]
   }
 
-  gift () {
-    return this.pieces[this.random()]
-  }
-
-  /**
-   * Running Wheel
-   */
-
-  calculate (gift) {
+  getAngle (gift) {
     let { angle, from } = gift
-    return (360 - (from + angle)) + (angle / 2)
+    // Full degree - (start of arc + arc by angle) + (angle / 2) - pointer position
+    return (360 - (from + angle)) + (angle / 2) - 90
   }
 
-  run () {
+  start () {
     // console.log('Playing!')
     this._isPlaying = !this._isPlaying
-    let gift = this.gift()
-    let angle = this.calculate(gift)
+    let gift = this.getWinner()
+    let angle = this.getAngle(gift)
     let count = 0
     let maximumDegree = (7200 + angle)
 
-    this.inject(maximumDegree)
+    this.setKeyframe(maximumDegree)
 
-    // console.log(gift)
-    
     this.selector.addClass('wof-animate')
+
+    setTimeout(() => {
+      console.log(gift)
+    }, 10000)
   }
 }

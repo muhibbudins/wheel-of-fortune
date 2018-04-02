@@ -1,0 +1,29 @@
+#wheel {
+  width: 400px;
+  height: 400px;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+#pointer {
+  width: 20px;
+  height: 40px;
+  top: 0;
+  transform: translateX(-50%);
+  left: 50%;
+  background-color: #EDEDED;
+  position: absolute;
+  z-index: 2000;
+}
+#wrapper {
+  position: relative;
+  width: 400px;
+}
+#wheel.wof-animate {
+  -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+          animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}

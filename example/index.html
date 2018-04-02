@@ -5,32 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <style>
-    #wheel {
-      width: 400px;
-      height: 400px;
-    }
-    #pointer {
-      width: 40px;
-      height: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      right: 0;
-      background-color: #EDEDED;
-      position: absolute;
-      z-index: 2000;
-    }
-    #wrapper {
-      position: relative;
-      width: 400px;
-    }
-    #wheel.wof-animate {
-      -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
-              animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
-      -webkit-animation-fill-mode: forwards;
-              animation-fill-mode: forwards;
-    }
-  </style>
 </head>
 <body>
   <div id="wrapper">
@@ -42,7 +16,7 @@
   <script src="../dist/wof.js"></script>
   <script>
     const WOF = new WheelOfFortune({
-      wheel: './wheel.svg',
+      wheel: './assets/basic.png',
       pieces: [
         { angle: 60, from: 300, gift: 'Gift 1' },
         { angle: 40, from: 0, gift: 'Gift 2' },
@@ -55,7 +29,7 @@
     });
 
     document.getElementById('run').addEventListener('click', function() {
-      WOF.run();
+      WOF.start();
     }, false);
   </script>
 </body>
