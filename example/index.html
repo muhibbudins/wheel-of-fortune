@@ -5,13 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Wheel Of Fortune</title>
+
+  <style>
+    .demo {
+      width: 600px;
+      margin: 100px auto;
+    }
+    .wof-winner {
+      width: 100%;
+      border: 1px solid #ABABAB;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+      min-height: 60px;
+    }
+  </style>
 </head>
 <body>
-  <div id="wrapper">
-    <div id="pointer"></div>
-    <div id="wheel"></div>
+  <div class="demo">
+    <div class="wof-wrapper">
+      <div class="wof-pointer"></div>
+      <div class="wof-wheel"></div>
+      <div class="wof-trigger">START</div>
+    </div>
+    <div class="wof-winner"></div>
+    <br>
+    <button id="external-trigger">External Trigger</button>
   </div>
-  <button id="run">Run</button>
 
   <script src="../dist/wof.js"></script>
   <script>
@@ -28,7 +48,7 @@
       ]
     });
 
-    document.getElementById('run').addEventListener('click', function() {
+    document.getElementById('external-trigger').addEventListener('click', function() {
       WOF.start();
     }, false);
   </script>

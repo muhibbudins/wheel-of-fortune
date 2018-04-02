@@ -1590,6 +1590,8 @@ var WheelOfFortune = function () {
    * @param {Object} config 
    */
   function WheelOfFortune(config) {
+    var _this = this;
+
     _classCallCheck(this, WheelOfFortune);
 
     /**
@@ -1607,7 +1609,7 @@ var WheelOfFortune = function () {
     /**
      * 
      */
-    this.selector = (0, _domtastic2.default)('#wheel');
+    this.selector = (0, _domtastic2.default)('.wof-wheel');
     this.source = null;
     this.degree = 7200;
     this.clicked = 0;
@@ -1617,6 +1619,10 @@ var WheelOfFortune = function () {
     this._isEnded = false;
 
     this.initialize();
+
+    (0, _domtastic2.default)('.wof-trigger').on('click', function () {
+      return _this.start();
+    });
   }
 
   /**
@@ -1627,16 +1633,16 @@ var WheelOfFortune = function () {
   _createClass(WheelOfFortune, [{
     key: 'initialize',
     value: function initialize() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.image.indexOf('svg') > -1) {
         _axios2.default.get(this.image).then(function (_ref) {
           var data = _ref.data;
 
-          _this.source = data;
-          _this.svg = (0, _svg2.default)(_this.selector[0]);
+          _this2.source = data;
+          _this2.svg = (0, _svg2.default)(_this2.selector[0]);
 
-          _this.drawSVG();
+          _this2.drawSVG();
         });
       } else {
         this.drawImage(this.image);
@@ -1719,10 +1725,11 @@ var WheelOfFortune = function () {
 
       this.setKeyframe(maximumDegree);
 
-      this.selector.addClass('wof-animate');
+      this.selector.addClass('wof-wheel_play');
 
       setTimeout(function () {
         console.log(gift);
+        (0, _domtastic2.default)('.wof-winner').html(JSON.stringify(gift));
       }, 10000);
     }
   }]);
@@ -27023,7 +27030,7 @@ exports = module.exports = __webpack_require__(54)(false);
 
 
 // module
-exports.push([module.i, "#wheel {\n  width: 400px;\n  height: 400px; }\n  #wheel img {\n    width: 100%;\n    height: auto; }\n\n#pointer {\n  width: 20px;\n  height: 40px;\n  top: 0;\n  transform: translateX(-50%);\n  left: 50%;\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000; }\n\n#wrapper {\n  position: relative;\n  width: 400px; }\n\n#wheel.wof-animate {\n  -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n  animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n  -webkit-animation-fill-mode: forwards;\n  animation-fill-mode: forwards; }\n", ""]);
+exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  border-width: 50px 20px 0 20px;\n  border-color: #11263d transparent transparent transparent;\n  top: 0;\n  left: 50%;\n  transform: translateX(-50%);\n  position: absolute;\n  z-index: 2000; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n  .wof-wheel_play {\n    -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    -webkit-animation-fill-mode: forwards;\n    animation-fill-mode: forwards; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center; }\n", ""]);
 
 // exports
 

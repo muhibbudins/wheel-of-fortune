@@ -1,29 +1,49 @@
-#wheel {
-  width: 400px;
-  height: 400px;
-
-  img {
-    width: 100%;
-    height: auto;
+.wof {
+  &-wrapper {
+    position: relative;
+    width: 400px;
+    margin: 0 auto;
   }
-}
-#pointer {
-  width: 20px;
-  height: 40px;
-  top: 0;
-  transform: translateX(-50%);
-  left: 50%;
-  background-color: #EDEDED;
-  position: absolute;
-  z-index: 2000;
-}
-#wrapper {
-  position: relative;
-  width: 400px;
-}
-#wheel.wof-animate {
-  -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
-          animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
-  -webkit-animation-fill-mode: forwards;
-          animation-fill-mode: forwards;
+  &-pointer {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 50px 20px 0 20px;
+    border-color: #11263d transparent transparent transparent;    
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    z-index: 2000;
+  }
+  &-wheel {
+    width: 400px;
+    height: 400px;
+  
+    img {
+      width: 100%;
+      height: auto;
+    }
+
+    &_play {
+      -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+              animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+      -webkit-animation-fill-mode: forwards;
+              animation-fill-mode: forwards;
+    }
+  }
+  &-trigger {
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    background-color: #EDEDED;
+    position: absolute;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

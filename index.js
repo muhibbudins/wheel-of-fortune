@@ -35,7 +35,7 @@ export default class WheelOfFortune {
     /**
      * 
      */
-    this.selector = $('#wheel')
+    this.selector = $('.wof-wheel')
     this.source = null
     this.degree = 7200
     this.clicked = 0
@@ -45,6 +45,8 @@ export default class WheelOfFortune {
     this._isEnded = false
 
     this.initialize()
+
+    $('.wof-trigger').on('click', () => this.start())
   }
 
   /**
@@ -128,10 +130,11 @@ export default class WheelOfFortune {
 
     this.setKeyframe(maximumDegree)
 
-    this.selector.addClass('wof-animate')
+    this.selector.addClass('wof-wheel_play')
 
     setTimeout(() => {
       console.log(gift)
+      $('.wof-winner').html(JSON.stringify(gift))
     }, 10000)
   }
 }
