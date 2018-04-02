@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #wheel {
+      width: 400px;
+      height: 400px;
+    }
+    #pointer {
+      width: 40px;
+      height: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 0;
+      background-color: #EDEDED;
+      position: absolute;
+      z-index: 2000;
+    }
+    #wrapper {
+      position: relative;
+      width: 400px;
+    }
+    #wheel.wof-animate {
+      -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+              animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+      -webkit-animation-fill-mode: forwards;
+              animation-fill-mode: forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="pointer"></div>
+    <div id="wheel"></div>
+  </div>
+  <button id="run">Run</button>
+
+  <script src="../dist/wof.js"></script>
+  <script>
+    const WOF = new WheelOfFortune({
+      wheel: './wheel.svg',
+      pieces: [
+        { angle: 60, from: 300, gift: 'Gift 1' },
+        { angle: 40, from: 0, gift: 'Gift 2' },
+        { angle: 50, from: 40, gift: 'Gift 3' },
+        { angle: 45, from: 90, gift: 'Gift 4' },
+        { angle: 45, from: 135, gift: 'Gift 5' },
+        { angle: 90, from: 180, gift: 'Gift 6' },
+        { angle: 30, from: 270, gift: 'Gift 7' },
+      ]
+    })
+    document.getElementById('run').addEventListener('click', function() {
+      WOF.run()
+    }, false)
+  </script>
+</body>
+</html>
