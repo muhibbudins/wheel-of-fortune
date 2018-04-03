@@ -33,11 +33,16 @@ export default class WheelOfFortune {
     this.pieces = config.pieces
 
     /**
+     * Set configuration of pointer
+     */
+    if (!config.caretPosition) throw Error('Caret position must be defined')
+
+    /**
      * 
      */
     this.selector = $('.wof-wheel')
     this.source = null
-    this.degree = 7200
+    this.degrees = 7200
     this.clicked = 0
     this.caretPosition = {
       'top': {
@@ -57,12 +62,12 @@ export default class WheelOfFortune {
         angle: 270
       }
     }
+    
+    this.caretPosition = this.caretPosition[config.caretPosition]
+    $('.wof-pointer').addClass(this.caretPosition.className)
 
-    if (config.caretPosition) {
-      this.caretPosition = this.caretPosition[config.caretPosition]
-      $('.wof-pointer').addClass(this.caretPosition.className)
-    } else {
-      $('.wof-pointer').addClass('wof-pointer-top')
+    if (config.probability) {
+      this.probability = true
     }
 
     this.isPlaying = false
@@ -103,7 +108,7 @@ export default class WheelOfFortune {
   /**
    * Setter
    */
-  setKeyframe (maximumDegree) {
+  setKeyframe (maximumDegrees) {
     var styleEl = document.createElement('style'),
         styleSheet;
   
@@ -115,8 +120,8 @@ export default class WheelOfFortune {
 
     let rule = `WOFAnimate {
       100% {
-        -webkit-transform: rotate(${ maximumDegree }deg);
-                transform: rotate(${ maximumDegree }deg);
+        -webkit-transform: rotate(${ maximumDegrees }deg);
+                transform: rotate(${ maximumDegrees }deg);
       }
     }`
 
@@ -131,16 +136,86 @@ export default class WheelOfFortune {
    * Getter
    */
   getWinner () {
-    let sorted = _.orderBy(this.pieces, 'angle', 'desc')
-    let list = Array.from(this.pieces.map(item => item.angle)).sort().reverse()
-    let index = Math.floor(Math.random() * list.length)
+    /**
+     * If winner algorithm using Probability Algorithm
+     */
+    if (this.probability) {
+      console.log('use probability')
+      let list = Array.from(this.pieces.map(item => item.angle))
+      let weight = Array.from(this.pieces.map(item => item.prob))
+      console.log(list, weight)
+      
+      var generateWeighedList = function(list, weight) {
+        var weighed_list = [];
+        var lastMultiple = 0
+        let temporary = []
+        let cycle = 0
+          
+          // Loop over weights
+          for (var i = 0; i < weight.length; i++) {
+              var multiples = weight[i] * 100;
+              var x = {}
+              x['index'] = i
+              x['start'] = cycle > 1 ? lastMultiple - cycle : lastMultiple
+              x['last'] = cycle > 1 ? lastMultiple + multiples - cycle : lastMultiple + multiples
 
-    return sorted[index]
+              temporary.push(x)
+              
+              lastMultiple = lastMultiple + multiples + 1
+              cycle++
+
+              // Loop over the list of items
+              for (var j = 0; j < multiples; j++) {
+                  weighed_list.push(list[i]);
+              }
+          }
+          
+          return {
+            weighed_list: weighed_list,
+            temporary: temporary
+          };
+      };
+      
+      var generate = generateWeighedList(list, weight);
+      
+      console.log(generate.temporary)
+      console.log(generate.weighed_list, generate.weighed_list.length);
+
+      var rand = function(min, max) {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+      };
+      
+      var random_num = rand(0, generate.weighed_list.length);
+      console.log(random_num, generate.weighed_list[random_num]);
+
+      generate.temporary.map(item => {
+        if (item.start >= random_num && random_num <= item.last) {
+          console.log(item.index, this.pieces[item.index])
+        }
+      })
+
+      return generate.weighed_list[random_num]
+    }
+
+    /**
+     * Use default random algorithm
+     */
+    else {
+      let sorted = _.orderBy(this.pieces, 'angle', 'desc')
+      let list = Array.from(this.pieces.map(item => item.angle)).sort().reverse()
+      let index = Math.floor(Math.random() * list.length)
+  
+      return sorted[index]
+    }
   }
 
+  /**
+   * Calculate last rotation angle by pieces position
+   * @param {Object} gift 
+   */
   getAngle (gift) {
     let { angle, from } = gift
-    // Full degree - (start of arc + arc by angle) + (angle / 2) - pointer position
+    // Full degrees - (start of arc + arc by angle) + (angle / 2) - pointer position
     return (360 - (from + angle)) + (angle / 2) - this.caretPosition.angle
   }
 
@@ -157,9 +232,9 @@ export default class WheelOfFortune {
     let gift = this.getWinner()
     let angle = this.getAngle(gift)
     let count = 0
-    let maximumDegree = (7200 + angle)
+    let maximumDegrees = (7200 + angle)
 
-    this.setKeyframe(maximumDegree)
+    this.setKeyframe(maximumDegrees)
 
     this.selector.addClass('wof-wheel_play')
 
