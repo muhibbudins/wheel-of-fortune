@@ -5,6 +5,11 @@ import _ from 'lodash'
 import './index.scss'
 
 /**
+ * Private property for pieces
+ */
+let Pieces = {}
+
+/**
  * Wheel Of Fortune
  * Simple wheel of fortune with specific angle, build with ES6, Webpack and SASS 
  * 
@@ -30,7 +35,7 @@ export default class WheelOfFortune {
      * Set configuration of pieces
      */
     if (!config.pieces) throw Error('Pieces of wheel must be defined')
-    this.pieces = config.pieces
+    Pieces = config.pieces
 
     /**
      * Set configuration of pointer
@@ -41,7 +46,6 @@ export default class WheelOfFortune {
      * 
      */
     this.selector = $('.wof-wheel')
-    this.source = null
     this.degrees = 7200
     this.clicked = 0
     this.caretPosition = {
@@ -71,7 +75,6 @@ export default class WheelOfFortune {
     }
 
     this.isPlaying = false
-    this._isEnded = false
 
     this.initialize()
 
@@ -84,18 +87,16 @@ export default class WheelOfFortune {
   initialize () {
     if (this.image.indexOf('svg') > -1) {
       axios.get(this.image).then(({ data }) => {
-        this.source = data
         this.svg = svg(this.selector[0])
-
-        this.drawSVG()
+        this.drawSVG(data)
       })
     } else {
       this.drawImage(this.image)
     }
   }
 
-  drawSVG () {
-    this.svg.svg(this.source)
+  drawSVG (image) {
+    this.svg.svg(image)
   }
 
   drawImage (source) {
@@ -140,8 +141,8 @@ export default class WheelOfFortune {
      * If winner algorithm using Probability Algorithm
      */
     if (this.probability) {
-      let list = Array.from(this.pieces.map(item => item.angle)),
-          weight = Array.from(this.pieces.map(item => item.prob)),
+      let list = Array.from(Pieces.map(item => item.angle)),
+          weight = Array.from(Pieces.map(item => item.prob)),
           piece = [],
           generate, random_num;
       
@@ -169,7 +170,7 @@ export default class WheelOfFortune {
             tempObject['index'] = i
             tempObject['start'] = cycle < 1 ? lastMultiple : lastMultiple + 1
             tempObject['last'] = lastMultiple + multiples
-            tempObject['piece'] = this.pieces[i]
+            tempObject['piece'] = Pieces[i]
 
             temporary.push(tempObject)
             
@@ -240,8 +241,8 @@ export default class WheelOfFortune {
       /**
        * Create sorted array
        */
-      let sorted = _.orderBy(this.pieces, 'angle', 'desc')
-      let list = Array.from(this.pieces.map(item => item.angle)).sort().reverse()
+      let sorted = _.orderBy(Pieces, 'angle', 'desc')
+      let list = Array.from(Pieces.map(item => item.angle)).sort().reverse()
 
       /**
        * Get random number
@@ -271,21 +272,26 @@ export default class WheelOfFortune {
   }
 
   start () {
-    this.destroy()
+    if (this.isPlaying) {
+      console.log('asd')
+      return false
+    } else {
+      this.destroy()
     
-    this.isPlaying = !this.isPlaying
-
-    let gift = this.getWinner()
-    let angle = this.getAngle(gift)
-    let count = 0
-    let maximumDegrees = (7200 + angle)
-
-    this.setKeyframe(maximumDegrees)
-
-    this.selector.addClass('wof-wheel_play')
-
-    setTimeout(() => {
-      $('.wof-winner').html(JSON.stringify(gift))
-    }, 10000)
+      this.isPlaying = !this.isPlaying
+  
+      let gift = this.getWinner()
+      let angle = this.getAngle(gift)
+      let count = 0
+      let maximumDegrees = (7200 + angle)
+  
+      this.setKeyframe(maximumDegrees)
+  
+      this.selector.addClass('wof-wheel_play')
+  
+      setTimeout(() => {
+        $('.wof-winner').html(JSON.stringify(gift))
+      }, 10000)
+    }
   }
 }

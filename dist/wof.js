@@ -1577,6 +1577,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
+ * Private property for pieces
+ */
+var Pieces = {};
+
+/**
  * Wheel Of Fortune
  * Simple wheel of fortune with specific angle, build with ES6, Webpack and SASS 
  * 
@@ -1586,6 +1591,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * 
  * https://github.com/muhibbudins/wheel-of-fortune 
  */
+
 var WheelOfFortune = function () {
   /**
    * Create base configuration
@@ -1606,7 +1612,7 @@ var WheelOfFortune = function () {
      * Set configuration of pieces
      */
     if (!config.pieces) throw Error('Pieces of wheel must be defined');
-    this.pieces = config.pieces;
+    Pieces = config.pieces;
 
     /**
      * Set configuration of pointer
@@ -1617,7 +1623,6 @@ var WheelOfFortune = function () {
      * 
      */
     this.selector = (0, _domtastic2.default)('.wof-wheel');
-    this.source = null;
     this.degrees = 7200;
     this.clicked = 0;
     this.caretPosition = {
@@ -1647,7 +1652,6 @@ var WheelOfFortune = function () {
     }
 
     this.isPlaying = false;
-    this._isEnded = false;
 
     this.initialize();
 
@@ -1670,10 +1674,8 @@ var WheelOfFortune = function () {
         _axios2.default.get(this.image).then(function (_ref) {
           var data = _ref.data;
 
-          _this2.source = data;
           _this2.svg = (0, _svg2.default)(_this2.selector[0]);
-
-          _this2.drawSVG();
+          _this2.drawSVG(data);
         });
       } else {
         this.drawImage(this.image);
@@ -1681,8 +1683,8 @@ var WheelOfFortune = function () {
     }
   }, {
     key: 'drawSVG',
-    value: function drawSVG() {
-      this.svg.svg(this.source);
+    value: function drawSVG(image) {
+      this.svg.svg(image);
     }
   }, {
     key: 'drawImage',
@@ -1727,17 +1729,15 @@ var WheelOfFortune = function () {
   }, {
     key: 'getWinner',
     value: function getWinner() {
-      var _this3 = this;
-
       /**
        * If winner algorithm using Probability Algorithm
        */
       if (this.probability) {
         var _ret = function () {
-          var list = Array.from(_this3.pieces.map(function (item) {
+          var list = Array.from(Pieces.map(function (item) {
             return item.angle;
           })),
-              weight = Array.from(_this3.pieces.map(function (item) {
+              weight = Array.from(Pieces.map(function (item) {
             return item.prob;
           })),
               piece = [],
@@ -1769,7 +1769,7 @@ var WheelOfFortune = function () {
               tempObject['index'] = i;
               tempObject['start'] = cycle < 1 ? lastMultiple : lastMultiple + 1;
               tempObject['last'] = lastMultiple + multiples;
-              tempObject['piece'] = _this3.pieces[i];
+              tempObject['piece'] = Pieces[i];
 
               temporary.push(tempObject);
 
@@ -1845,8 +1845,8 @@ var WheelOfFortune = function () {
           /**
            * Create sorted array
            */
-          var sorted = _lodash2.default.orderBy(this.pieces, 'angle', 'desc');
-          var _list = Array.from(this.pieces.map(function (item) {
+          var sorted = _lodash2.default.orderBy(Pieces, 'angle', 'desc');
+          var _list = Array.from(Pieces.map(function (item) {
             return item.angle;
           })).sort().reverse();
 
@@ -1885,22 +1885,31 @@ var WheelOfFortune = function () {
   }, {
     key: 'start',
     value: function start() {
-      this.destroy();
+      var _this3 = this;
 
-      this.isPlaying = !this.isPlaying;
+      if (this.isPlaying) {
+        console.log('asd');
+        return false;
+      } else {
+        (function () {
+          _this3.destroy();
 
-      var gift = this.getWinner();
-      var angle = this.getAngle(gift);
-      var count = 0;
-      var maximumDegrees = 7200 + angle;
+          _this3.isPlaying = !_this3.isPlaying;
 
-      this.setKeyframe(maximumDegrees);
+          var gift = _this3.getWinner();
+          var angle = _this3.getAngle(gift);
+          var count = 0;
+          var maximumDegrees = 7200 + angle;
 
-      this.selector.addClass('wof-wheel_play');
+          _this3.setKeyframe(maximumDegrees);
 
-      setTimeout(function () {
-        (0, _domtastic2.default)('.wof-winner').html(JSON.stringify(gift));
-      }, 10000);
+          _this3.selector.addClass('wof-wheel_play');
+
+          setTimeout(function () {
+            (0, _domtastic2.default)('.wof-winner').html(JSON.stringify(gift));
+          }, 10000);
+        })();
+      }
     }
   }]);
 
