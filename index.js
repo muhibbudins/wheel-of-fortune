@@ -26,58 +26,47 @@ export default class WheelOfFortune {
    */
   constructor (config) {
     /**
-     * Set wheel image
-     */
-    if (!config.wheel) throw Error('Source of wheel must be defined')
-    this.image = config.wheel
-
-    /**
      * Set configuration of pieces
      */
     if (!config.pieces) throw Error('Pieces of wheel must be defined')
     Pieces = config.pieces
 
     /**
+     * Set wheel image
+     */
+    if (!config.wheel) throw Error('Source of wheel must be defined')
+    this.image = config.wheel
+
+    /**
      * Set configuration of pointer
      */
     if (!config.caretPosition) throw Error('Caret position must be defined')
+    this.caret = config.caretPosition
 
     /**
-     * 
+     * Set probability config
      */
-    this.selector = $('.wof-wheel')
-    this.degrees = 7200
-    this.clicked = 0
-    this.caretPosition = {
-      'top': {
-        className: 'wof-pointer-top',
-        angle: 90
-      },
-      'right': {
-        className: 'wof-pointer-right',
-        angle: 0
-      },
-      'left': {
-        className: 'wof-pointer-left',
-        angle: 180
-      },
-      'bottom': {
-        className: 'wof-pointer-bottom',
-        angle: 270
-      }
-    }
-    
-    this.caretPosition = this.caretPosition[config.caretPosition]
-    $('.wof-pointer').addClass(this.caretPosition.className)
-
     if (config.probability) {
       this.probability = true
     }
 
+    /**
+     * Set default configuration
+     */
+    this.wheel = $('.wof-wheel')
+    this.degrees = 7200
+    this.clicked = 0
     this.isPlaying = false
 
+    /**
+     * Initialize wheel
+     */
     this.initialize()
+    this.setPointer()
 
+    /**
+     * Bind trigger to start wheel
+     */
     $('.wof-trigger').on('click', () => this.start())
   }
 
@@ -87,27 +76,34 @@ export default class WheelOfFortune {
   initialize () {
     if (this.image.indexOf('svg') > -1) {
       axios.get(this.image).then(({ data }) => {
-        this.svg = svg(this.selector[0])
-        this.drawSVG(data)
+        this.drawSVG(svg(this.wheel[0]), data)
       })
     } else {
       this.drawImage(this.image)
     }
   }
 
-  drawSVG (image) {
-    this.svg.svg(image)
+  /**
+   * Draw SVG image
+   * @param {XML} image 
+   */
+  drawSVG (selector, image) {
+    selector.svg(image)
   }
 
+  /**
+   * Draw binary image
+   * @param {Link} source 
+   */
   drawImage (source) {
     let image = document.createElement('img')
     image.src = source
 
-    this.selector.append(image)
+    this.wheel.append(image)
   }
 
   /**
-   * Setter
+   * Set rotation animation
    */
   setKeyframe (maximumDegrees) {
     let styleEl = document.createElement('style'),
@@ -126,11 +122,42 @@ export default class WheelOfFortune {
       }
     }`
 
+    /**
+     * Insert keyframe by CSS Rule
+     */
     if (CSSRule.KEYFRAMES_RULE) { // W3C
         styleSheet.insertRule(`@keyframes ${rule}`, styleSheet.cssRules.length)
     } else if (CSSRule.WEBKIT_KEYFRAMES_RULE) { // WebKit
         styleSheet.insertRule(`@-webkit-keyframes ${rule}`, styleSheet.cssRules.length)
     }
+  }
+
+  /**
+   * Set pointer position
+   */
+  setPointer () {
+    let caretPosition = {
+      'top': {
+        className: 'wof-pointer-top',
+        angle: 90
+      },
+      'right': {
+        className: 'wof-pointer-right',
+        angle: 0
+      },
+      'left': {
+        className: 'wof-pointer-left',
+        angle: 180
+      },
+      'bottom': {
+        className: 'wof-pointer-bottom',
+        angle: 270
+      }
+    }
+    
+    this.caretPosition = caretPosition[this.caret]
+
+    $('.wof-pointer').addClass(this.caretPosition.className)
   }
 
   /**
@@ -266,11 +293,17 @@ export default class WheelOfFortune {
     return (360 - (from + angle)) + (angle / 2) - this.caretPosition.angle
   }
 
+  /**
+   * Destroy Wheel
+   */
   destroy () {
     this.isPlaying = !this.isPlaying
-    this.selector.removeClass('wof-wheel_play')
+    this.wheel.removeClass('wof-wheel_play')
   }
 
+  /**
+   * Start Wheel
+   */
   start () {
     if (this.isPlaying) {
       console.log('asd')
@@ -287,7 +320,7 @@ export default class WheelOfFortune {
   
       this.setKeyframe(maximumDegrees)
   
-      this.selector.addClass('wof-wheel_play')
+      this.wheel.addClass('wof-wheel_play')
   
       setTimeout(() => {
         $('.wof-winner').html(JSON.stringify(gift))

@@ -1603,58 +1603,47 @@ var WheelOfFortune = function () {
     _classCallCheck(this, WheelOfFortune);
 
     /**
-     * Set wheel image
-     */
-    if (!config.wheel) throw Error('Source of wheel must be defined');
-    this.image = config.wheel;
-
-    /**
      * Set configuration of pieces
      */
     if (!config.pieces) throw Error('Pieces of wheel must be defined');
     Pieces = config.pieces;
 
     /**
+     * Set wheel image
+     */
+    if (!config.wheel) throw Error('Source of wheel must be defined');
+    this.image = config.wheel;
+
+    /**
      * Set configuration of pointer
      */
     if (!config.caretPosition) throw Error('Caret position must be defined');
+    this.caret = config.caretPosition;
 
     /**
-     * 
+     * Set probability config
      */
-    this.selector = (0, _domtastic2.default)('.wof-wheel');
-    this.degrees = 7200;
-    this.clicked = 0;
-    this.caretPosition = {
-      'top': {
-        className: 'wof-pointer-top',
-        angle: 90
-      },
-      'right': {
-        className: 'wof-pointer-right',
-        angle: 0
-      },
-      'left': {
-        className: 'wof-pointer-left',
-        angle: 180
-      },
-      'bottom': {
-        className: 'wof-pointer-bottom',
-        angle: 270
-      }
-    };
-
-    this.caretPosition = this.caretPosition[config.caretPosition];
-    (0, _domtastic2.default)('.wof-pointer').addClass(this.caretPosition.className);
-
     if (config.probability) {
       this.probability = true;
     }
 
+    /**
+     * Set default configuration
+     */
+    this.wheel = (0, _domtastic2.default)('.wof-wheel');
+    this.degrees = 7200;
+    this.clicked = 0;
     this.isPlaying = false;
 
+    /**
+     * Initialize wheel
+     */
     this.initialize();
+    this.setPointer();
 
+    /**
+     * Bind trigger to start wheel
+     */
     (0, _domtastic2.default)('.wof-trigger').on('click', function () {
       return _this.start();
     });
@@ -1674,29 +1663,40 @@ var WheelOfFortune = function () {
         _axios2.default.get(this.image).then(function (_ref) {
           var data = _ref.data;
 
-          _this2.svg = (0, _svg2.default)(_this2.selector[0]);
-          _this2.drawSVG(data);
+          _this2.drawSVG((0, _svg2.default)(_this2.wheel[0]), data);
         });
       } else {
         this.drawImage(this.image);
       }
     }
+
+    /**
+     * Draw SVG image
+     * @param {XML} image 
+     */
+
   }, {
     key: 'drawSVG',
-    value: function drawSVG(image) {
-      this.svg.svg(image);
+    value: function drawSVG(selector, image) {
+      selector.svg(image);
     }
+
+    /**
+     * Draw binary image
+     * @param {Link} source 
+     */
+
   }, {
     key: 'drawImage',
     value: function drawImage(source) {
       var image = document.createElement('img');
       image.src = source;
 
-      this.selector.append(image);
+      this.wheel.append(image);
     }
 
     /**
-     * Setter
+     * Set rotation animation
      */
 
   }, {
@@ -1713,6 +1713,9 @@ var WheelOfFortune = function () {
 
       var rule = 'WOFAnimate {\n      100% {\n        -webkit-transform: rotate(' + maximumDegrees + 'deg);\n                transform: rotate(' + maximumDegrees + 'deg);\n      }\n    }';
 
+      /**
+       * Insert keyframe by CSS Rule
+       */
       if (CSSRule.KEYFRAMES_RULE) {
         // W3C
         styleSheet.insertRule('@keyframes ' + rule, styleSheet.cssRules.length);
@@ -1720,6 +1723,37 @@ var WheelOfFortune = function () {
         // WebKit
         styleSheet.insertRule('@-webkit-keyframes ' + rule, styleSheet.cssRules.length);
       }
+    }
+
+    /**
+     * Set pointer position
+     */
+
+  }, {
+    key: 'setPointer',
+    value: function setPointer() {
+      var caretPosition = {
+        'top': {
+          className: 'wof-pointer-top',
+          angle: 90
+        },
+        'right': {
+          className: 'wof-pointer-right',
+          angle: 0
+        },
+        'left': {
+          className: 'wof-pointer-left',
+          angle: 180
+        },
+        'bottom': {
+          className: 'wof-pointer-bottom',
+          angle: 270
+        }
+      };
+
+      this.caretPosition = caretPosition[this.caret];
+
+      (0, _domtastic2.default)('.wof-pointer').addClass(this.caretPosition.className);
     }
 
     /**
@@ -1876,12 +1910,22 @@ var WheelOfFortune = function () {
 
       return 360 - (from + angle) + angle / 2 - this.caretPosition.angle;
     }
+
+    /**
+     * Destroy Wheel
+     */
+
   }, {
     key: 'destroy',
     value: function destroy() {
       this.isPlaying = !this.isPlaying;
-      this.selector.removeClass('wof-wheel_play');
+      this.wheel.removeClass('wof-wheel_play');
     }
+
+    /**
+     * Start Wheel
+     */
+
   }, {
     key: 'start',
     value: function start() {
@@ -1903,7 +1947,7 @@ var WheelOfFortune = function () {
 
           _this3.setKeyframe(maximumDegrees);
 
-          _this3.selector.addClass('wof-wheel_play');
+          _this3.wheel.addClass('wof-wheel_play');
 
           setTimeout(function () {
             (0, _domtastic2.default)('.wof-winner').html(JSON.stringify(gift));
@@ -27209,7 +27253,7 @@ exports = module.exports = __webpack_require__(54)(false);
 
 
 // module
-exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  position: absolute;\n  z-index: 2000; }\n  .wof-pointer-top, .wof-pointer-bottom {\n    border-style: solid;\n    border-width: 50px 20px 0 20px;\n    border-color: #11263d transparent transparent transparent;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%); }\n  .wof-pointer-right, .wof-pointer-left {\n    border-style: solid;\n    border-width: 50px 20px 0 20px;\n    border-color: #11263d transparent transparent transparent;\n    right: 0;\n    top: 50%;\n    transform: translateY(-50%); }\n  .wof-pointer-bottom {\n    top: auto;\n    bottom: 0; }\n  .wof-pointer-left {\n    right: auto;\n    left: 0; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n  .wof-wheel_play {\n    -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    -webkit-animation-fill-mode: forwards;\n    animation-fill-mode: forwards; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center; }\n", ""]);
+exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  z-index: 2000; }\n  .wof-pointer-top, .wof-pointer-bottom {\n    border-width: 60px 20px 0 20px;\n    border-color: #27c8f4 transparent transparent transparent;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%); }\n  .wof-pointer-right, .wof-pointer-left {\n    border-width: 20px 60px 20px 0;\n    border-color: transparent #27c8f4 transparent transparent;\n    right: 0;\n    top: 50%;\n    transform: translateY(-50%); }\n  .wof-pointer-bottom {\n    top: auto;\n    bottom: 0;\n    border-width: 0 20px 60px 20px;\n    border-color: transparent transparent #27c8f4 transparent; }\n  .wof-pointer-left {\n    right: auto;\n    left: 0;\n    border-width: 20px 0 20px 60px;\n    border-color: transparent transparent transparent #27c8f4; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n  .wof-wheel_play {\n    -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    -webkit-animation-fill-mode: forwards;\n    animation-fill-mode: forwards; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer; }\n", ""]);
 
 // exports
 
