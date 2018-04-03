@@ -1613,9 +1613,31 @@ var WheelOfFortune = function () {
     this.source = null;
     this.degree = 7200;
     this.clicked = 0;
+    this.caretPosition = {
+      'top': {
+        className: 'wof-pointer-top',
+        angle: 90
+      },
+      'right': {
+        className: 'wof-pointer-right',
+        angle: 0
+      },
+      'left': {
+        className: 'wof-pointer-left',
+        angle: 180
+      },
+      'bottom': {
+        className: 'wof-pointer-bottom',
+        angle: 270
+      }
+    };
 
-    this._isPlaying = false;
-    this._isAnimating = false;
+    if (config.caretPosition) {
+      this.caretPosition = this.caretPosition[config.caretPosition];
+      (0, _domtastic2.default)('.wof-pointer').addClass(this.caretPosition.className);
+    }
+
+    this.isPlaying = false;
     this._isEnded = false;
 
     this.initialize();
@@ -1711,13 +1733,21 @@ var WheelOfFortune = function () {
           from = gift.from;
       // Full degree - (start of arc + arc by angle) + (angle / 2) - pointer position
 
-      return 360 - (from + angle) + angle / 2 - 90;
+      return 360 - (from + angle) + angle / 2 - this.caretPosition.angle;
+    }
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      this.isPlaying = !this.isPlaying;
+      this.selector.removeClass('wof-wheel_play');
     }
   }, {
     key: 'start',
     value: function start() {
-      // console.log('Playing!')
-      this._isPlaying = !this._isPlaying;
+      this.destroy();
+
+      this.isPlaying = !this.isPlaying;
+
       var gift = this.getWinner();
       var angle = this.getAngle(gift);
       var count = 0;
@@ -1728,7 +1758,6 @@ var WheelOfFortune = function () {
       this.selector.addClass('wof-wheel_play');
 
       setTimeout(function () {
-        console.log(gift);
         (0, _domtastic2.default)('.wof-winner').html(JSON.stringify(gift));
       }, 10000);
     }
@@ -27030,7 +27059,7 @@ exports = module.exports = __webpack_require__(54)(false);
 
 
 // module
-exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  border-width: 50px 20px 0 20px;\n  border-color: #11263d transparent transparent transparent;\n  top: 0;\n  left: 50%;\n  transform: translateX(-50%);\n  position: absolute;\n  z-index: 2000; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n  .wof-wheel_play {\n    -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    -webkit-animation-fill-mode: forwards;\n    animation-fill-mode: forwards; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center; }\n", ""]);
+exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  position: absolute;\n  z-index: 2000; }\n  .wof-pointer-top, .wof-pointer-bottom {\n    border-style: solid;\n    border-width: 50px 20px 0 20px;\n    border-color: #11263d transparent transparent transparent;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%); }\n  .wof-pointer-right, .wof-pointer-left {\n    border-style: solid;\n    border-width: 50px 20px 0 20px;\n    border-color: #11263d transparent transparent transparent;\n    right: 0;\n    top: 50%;\n    transform: translateY(-50%); }\n  .wof-pointer-bottom {\n    top: auto;\n    bottom: 0; }\n  .wof-pointer-left {\n    right: auto;\n    left: 0; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n  .wof-wheel_play {\n    -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    -webkit-animation-fill-mode: forwards;\n    animation-fill-mode: forwards; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center; }\n", ""]);
 
 // exports
 

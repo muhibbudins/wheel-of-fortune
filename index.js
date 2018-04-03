@@ -39,9 +39,33 @@ export default class WheelOfFortune {
     this.source = null
     this.degree = 7200
     this.clicked = 0
+    this.caretPosition = {
+      'top': {
+        className: 'wof-pointer-top',
+        angle: 90
+      },
+      'right': {
+        className: 'wof-pointer-right',
+        angle: 0
+      },
+      'left': {
+        className: 'wof-pointer-left',
+        angle: 180
+      },
+      'bottom': {
+        className: 'wof-pointer-bottom',
+        angle: 270
+      }
+    }
 
-    this._isPlaying = false
-    this._isAnimating = false
+    if (config.caretPosition) {
+      this.caretPosition = this.caretPosition[config.caretPosition]
+      $('.wof-pointer').addClass(this.caretPosition.className)
+    } else {
+      $('.wof-pointer').addClass('wof-pointer-top')
+    }
+
+    this.isPlaying = false
     this._isEnded = false
 
     this.initialize()
@@ -117,12 +141,19 @@ export default class WheelOfFortune {
   getAngle (gift) {
     let { angle, from } = gift
     // Full degree - (start of arc + arc by angle) + (angle / 2) - pointer position
-    return (360 - (from + angle)) + (angle / 2) - 90
+    return (360 - (from + angle)) + (angle / 2) - this.caretPosition.angle
+  }
+
+  destroy () {
+    this.isPlaying = !this.isPlaying
+    this.selector.removeClass('wof-wheel_play')
   }
 
   start () {
-    // console.log('Playing!')
-    this._isPlaying = !this._isPlaying
+    this.destroy()
+    
+    this.isPlaying = !this.isPlaying
+
     let gift = this.getWinner()
     let angle = this.getAngle(gift)
     let count = 0
@@ -133,7 +164,6 @@ export default class WheelOfFortune {
     this.selector.addClass('wof-wheel_play')
 
     setTimeout(() => {
-      console.log(gift)
       $('.wof-winner').html(JSON.stringify(gift))
     }, 10000)
   }
