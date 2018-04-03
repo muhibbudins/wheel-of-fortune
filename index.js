@@ -133,6 +133,129 @@ export default class WheelOfFortune {
   }
 
   /**
+   * Function to get a winner piece
+   */
+  getWinner () {
+    /**
+     * If winner algorithm using Probability Algorithm
+     */
+    if (this.probability) {
+      let list = Array.from(this.pieces.map(item => item.angle)),
+          weight = Array.from(this.pieces.map(item => item.prob)),
+          piece = [],
+          generate, random_num;
+      
+      /**
+       * Convert object of weight probability to weighed array
+       * @param {Array} list 
+       * @param {Array} weight 
+       */
+      let convertToWeight = (list, weight) => {
+        let weighed_list = [],
+            lastMultiple = 0,
+            temporary = [],
+            cycle = 0, multiples;
+        
+        /**
+         * Loop all defining probability
+         */
+        for (let i = 0; i < weight.length; i++) {
+            multiples = weight[i] * 100
+
+            /**
+             * Create temporary data
+             */
+            let tempObject = {}
+            tempObject['index'] = i
+            tempObject['start'] = cycle < 1 ? lastMultiple : lastMultiple + 1
+            tempObject['last'] = lastMultiple + multiples
+            tempObject['piece'] = this.pieces[i]
+
+            temporary.push(tempObject)
+            
+            /**
+             * Update piece position by multiplication
+             */
+            lastMultiple = lastMultiple + multiples
+            cycle++
+
+            /**
+             * Loop every probability by multiplication weight
+             */
+            for (let j = 0; j < multiples; j++) {
+                weighed_list.push(list[i])
+            }
+        }
+        
+        /**
+         * Return weight and temporary data
+         */
+        return {
+          weight: weighed_list,
+          temporary: temporary
+        }
+      }
+
+      /**
+       * Get random number
+       * @param {Number} min 
+       * @param {Number} max 
+       */
+      let random = function(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min
+      }
+      
+      /**
+       * Get conversion of object weight probability
+       */
+      generate = convertToWeight(list, weight)
+
+      /**
+       * Get random number by weight generated weight
+       */
+      random_num = random(0, generate.weight.length)
+
+      /**
+       * Loop all temporary data
+       */
+      generate.temporary.map(item => {
+        /**
+         * Get pieces by probability position
+         */
+        if (random_num >= item.start && random_num <= item.last) {
+          piece = item.piece
+        }
+      })
+
+      /**
+       * Return piece
+       */
+      return piece
+    }
+
+    /**
+     * Use default random algorithm
+     */
+    else {
+      /**
+       * Create sorted array
+       */
+      let sorted = _.orderBy(this.pieces, 'angle', 'desc')
+      let list = Array.from(this.pieces.map(item => item.angle)).sort().reverse()
+
+      /**
+       * Get random number
+       */
+      let index = Math.floor(Math.random() * list.length)
+  
+      /**
+       * Return piece
+       */
+      return sorted[index]
+    }
+  }
+
+  /**
    * Calculate last rotation angle by pieces position
    * @param {Object} gift 
    */

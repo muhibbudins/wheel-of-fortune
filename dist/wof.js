@@ -1550,6 +1550,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _axios = __webpack_require__(14);
@@ -1716,6 +1718,148 @@ var WheelOfFortune = function () {
         // WebKit
         styleSheet.insertRule('@-webkit-keyframes ' + rule, styleSheet.cssRules.length);
       }
+    }
+
+    /**
+     * Function to get a winner piece
+     */
+
+  }, {
+    key: 'getWinner',
+    value: function getWinner() {
+      var _this3 = this;
+
+      /**
+       * If winner algorithm using Probability Algorithm
+       */
+      if (this.probability) {
+        var _ret = function () {
+          var list = Array.from(_this3.pieces.map(function (item) {
+            return item.angle;
+          })),
+              weight = Array.from(_this3.pieces.map(function (item) {
+            return item.prob;
+          })),
+              piece = [],
+              generate = void 0,
+              random_num = void 0;
+
+          /**
+           * Convert object of weight probability to weighed array
+           * @param {Array} list 
+           * @param {Array} weight 
+           */
+          var convertToWeight = function convertToWeight(list, weight) {
+            var weighed_list = [],
+                lastMultiple = 0,
+                temporary = [],
+                cycle = 0,
+                multiples = void 0;
+
+            /**
+             * Loop all defining probability
+             */
+            for (var i = 0; i < weight.length; i++) {
+              multiples = weight[i] * 100;
+
+              /**
+               * Create temporary data
+               */
+              var tempObject = {};
+              tempObject['index'] = i;
+              tempObject['start'] = cycle < 1 ? lastMultiple : lastMultiple + 1;
+              tempObject['last'] = lastMultiple + multiples;
+              tempObject['piece'] = _this3.pieces[i];
+
+              temporary.push(tempObject);
+
+              /**
+               * Update piece position by multiplication
+               */
+              lastMultiple = lastMultiple + multiples;
+              cycle++;
+
+              /**
+               * Loop every probability by multiplication weight
+               */
+              for (var j = 0; j < multiples; j++) {
+                weighed_list.push(list[i]);
+              }
+            }
+
+            /**
+             * Return weight and temporary data
+             */
+            return {
+              weight: weighed_list,
+              temporary: temporary
+            };
+          };
+
+          /**
+           * Get random number
+           * @param {Number} min 
+           * @param {Number} max 
+           */
+          var random = function random(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+          };
+
+          /**
+           * Get conversion of object weight probability
+           */
+          generate = convertToWeight(list, weight);
+
+          /**
+           * Get random number by weight generated weight
+           */
+          random_num = random(0, generate.weight.length);
+
+          /**
+           * Loop all temporary data
+           */
+          generate.temporary.map(function (item) {
+            /**
+             * Get pieces by probability position
+             */
+            if (random_num >= item.start && random_num <= item.last) {
+              piece = item.piece;
+            }
+          });
+
+          /**
+           * Return piece
+           */
+          return {
+            v: piece
+          };
+        }();
+
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      }
+
+      /**
+       * Use default random algorithm
+       */
+      else {
+          /**
+           * Create sorted array
+           */
+          var sorted = _lodash2.default.orderBy(this.pieces, 'angle', 'desc');
+          var _list = Array.from(this.pieces.map(function (item) {
+            return item.angle;
+          })).sort().reverse();
+
+          /**
+           * Get random number
+           */
+          var index = Math.floor(Math.random() * _list.length);
+
+          /**
+           * Return piece
+           */
+          return sorted[index];
+        }
     }
 
     /**
