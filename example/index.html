@@ -30,7 +30,8 @@
     </div>
     <div class="wof-winner"></div>
     <br>
-    <button id="external-trigger">External Trigger</button>
+    <button id="start-button">Start Trigger</button>
+    <button id="reset-button">Reset Trigger</button>
   </div>
 
   <script src="../dist/wof.js"></script>
@@ -47,12 +48,13 @@
         { angle: 45, from: 135, gift: 'Gift 5', prob: .15 },
         { angle: 90, from: 180, gift: 'Gift 6', prob: .3 },
         { angle: 30, from: 270, gift: 'Gift 7', prob: .05 },
-      ]
+      ],
+      onFinish: function(wof) {
+        console.log(wof)
+      },
+      startButton: document.getElementById('start-button'),
+      resetButton: document.getElementById('reset-button'),
     });
-
-    document.getElementById('external-trigger').addEventListener('click', function() {
-      WOF.start();
-    }, false);
   </script>
 </body>
 </html>

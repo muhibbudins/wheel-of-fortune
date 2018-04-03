@@ -57,7 +57,24 @@ export default class WheelOfFortune {
     this.degrees = 7200
     this.clicked = 0
     this.playing = false
-    this.ended = true
+
+    if (config.onFinish) {
+      this.onFinish = config.onFinish
+    }
+
+    if (config.startButton) {
+      this.startButton = config.startButton
+      $(this.startButton).on('click', () => this.start())
+    }
+
+    if (config.resetButton) {
+      this.resetButton = config.resetButton
+      $(this.resetButton).on('click', () => {
+        if (!this.playing) {
+          this.destroy()
+        }
+      })
+    }
 
     /**
      * Initialize wheel
@@ -68,7 +85,7 @@ export default class WheelOfFortune {
     /**
      * Bind trigger to start wheel
      */
-    $('.wof-trigger').on('click', () => this.playing ? this.restart() : this.start())
+    $('.wof-trigger').on('click', () => this.start())
   }
 
   /**
@@ -306,12 +323,11 @@ export default class WheelOfFortune {
    * Start Wheel
    */
   start () {
-    if (!this.ended) {
+    if (this.playing) {
       return false
     } else {
       this.clicked++
       this.playing = true
-      this.ended = false
   
       let gift = this.getWinner(),
           angle = this.getAngle(gift),
@@ -323,13 +339,9 @@ export default class WheelOfFortune {
       this.wheel.addClass('wof-wheel_play')
       setTimeout(() => {
         $('.wof-winner').html(JSON.stringify(gift))
-        this.ended = true
+        this.onFinish(gift)
+        this.playing = false
       }, 10000)
     }
-  }
-
-  restart () {
-    this.destroy()
-    setTimeout(() => this.start(), 200)
   }
 }

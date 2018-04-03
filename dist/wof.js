@@ -1634,7 +1634,26 @@ var WheelOfFortune = function () {
     this.degrees = 7200;
     this.clicked = 0;
     this.playing = false;
-    this.ended = true;
+
+    if (config.onFinish) {
+      this.onFinish = config.onFinish;
+    }
+
+    if (config.startButton) {
+      this.startButton = config.startButton;
+      (0, _domtastic2.default)(this.startButton).on('click', function () {
+        return _this.start();
+      });
+    }
+
+    if (config.resetButton) {
+      this.resetButton = config.resetButton;
+      (0, _domtastic2.default)(this.resetButton).on('click', function () {
+        if (!_this.playing) {
+          _this.destroy();
+        }
+      });
+    }
 
     /**
      * Initialize wheel
@@ -1646,7 +1665,7 @@ var WheelOfFortune = function () {
      * Bind trigger to start wheel
      */
     (0, _domtastic2.default)('.wof-trigger').on('click', function () {
-      return _this.playing ? _this.restart() : _this.start();
+      return _this.start();
     });
   }
 
@@ -1932,13 +1951,12 @@ var WheelOfFortune = function () {
     value: function start() {
       var _this3 = this;
 
-      if (!this.ended) {
+      if (this.playing) {
         return false;
       } else {
         (function () {
           _this3.clicked++;
           _this3.playing = true;
-          _this3.ended = false;
 
           var gift = _this3.getWinner(),
               angle = _this3.getAngle(gift),
@@ -1950,20 +1968,11 @@ var WheelOfFortune = function () {
           _this3.wheel.addClass('wof-wheel_play');
           setTimeout(function () {
             (0, _domtastic2.default)('.wof-winner').html(JSON.stringify(gift));
-            _this3.ended = true;
+            _this3.onFinish(gift);
+            _this3.playing = false;
           }, 10000);
         })();
       }
-    }
-  }, {
-    key: 'restart',
-    value: function restart() {
-      var _this4 = this;
-
-      this.destroy();
-      setTimeout(function () {
-        return _this4.start();
-      }, 200);
     }
   }]);
 
