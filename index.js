@@ -56,7 +56,8 @@ export default class WheelOfFortune {
     this.wheel = $('.wof-wheel')
     this.degrees = 7200
     this.clicked = 0
-    this.isPlaying = false
+    this.playing = false
+    this.ended = true
 
     /**
      * Initialize wheel
@@ -67,7 +68,7 @@ export default class WheelOfFortune {
     /**
      * Bind trigger to start wheel
      */
-    $('.wof-trigger').on('click', () => this.start())
+    $('.wof-trigger').on('click', () => this.playing ? this.restart() : this.start())
   }
 
   /**
@@ -297,7 +298,7 @@ export default class WheelOfFortune {
    * Destroy Wheel
    */
   destroy () {
-    this.isPlaying = !this.isPlaying
+    this.playing = false
     this.wheel.removeClass('wof-wheel_play')
   }
 
@@ -305,26 +306,30 @@ export default class WheelOfFortune {
    * Start Wheel
    */
   start () {
-    if (this.isPlaying) {
-      console.log('asd')
+    if (!this.ended) {
       return false
     } else {
-      this.destroy()
-    
-      this.isPlaying = !this.isPlaying
+      this.clicked++
+      this.playing = true
+      this.ended = false
   
-      let gift = this.getWinner()
-      let angle = this.getAngle(gift)
-      let count = 0
-      let maximumDegrees = (7200 + angle)
+      let gift = this.getWinner(),
+          angle = this.getAngle(gift),
+          count = 0,
+          maximumDegrees = (7200 + angle);
   
       this.setKeyframe(maximumDegrees)
-  
+      
       this.wheel.addClass('wof-wheel_play')
-  
       setTimeout(() => {
         $('.wof-winner').html(JSON.stringify(gift))
+        this.ended = true
       }, 10000)
     }
+  }
+
+  restart () {
+    this.destroy()
+    setTimeout(() => this.start(), 200)
   }
 }

@@ -1633,7 +1633,8 @@ var WheelOfFortune = function () {
     this.wheel = (0, _domtastic2.default)('.wof-wheel');
     this.degrees = 7200;
     this.clicked = 0;
-    this.isPlaying = false;
+    this.playing = false;
+    this.ended = true;
 
     /**
      * Initialize wheel
@@ -1645,7 +1646,7 @@ var WheelOfFortune = function () {
      * Bind trigger to start wheel
      */
     (0, _domtastic2.default)('.wof-trigger').on('click', function () {
-      return _this.start();
+      return _this.playing ? _this.restart() : _this.start();
     });
   }
 
@@ -1918,7 +1919,7 @@ var WheelOfFortune = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      this.isPlaying = !this.isPlaying;
+      this.playing = false;
       this.wheel.removeClass('wof-wheel_play');
     }
 
@@ -1931,29 +1932,38 @@ var WheelOfFortune = function () {
     value: function start() {
       var _this3 = this;
 
-      if (this.isPlaying) {
-        console.log('asd');
+      if (!this.ended) {
         return false;
       } else {
         (function () {
-          _this3.destroy();
+          _this3.clicked++;
+          _this3.playing = true;
+          _this3.ended = false;
 
-          _this3.isPlaying = !_this3.isPlaying;
-
-          var gift = _this3.getWinner();
-          var angle = _this3.getAngle(gift);
-          var count = 0;
-          var maximumDegrees = 7200 + angle;
+          var gift = _this3.getWinner(),
+              angle = _this3.getAngle(gift),
+              count = 0,
+              maximumDegrees = 7200 + angle;
 
           _this3.setKeyframe(maximumDegrees);
 
           _this3.wheel.addClass('wof-wheel_play');
-
           setTimeout(function () {
             (0, _domtastic2.default)('.wof-winner').html(JSON.stringify(gift));
+            _this3.ended = true;
           }, 10000);
         })();
       }
+    }
+  }, {
+    key: 'restart',
+    value: function restart() {
+      var _this4 = this;
+
+      this.destroy();
+      setTimeout(function () {
+        return _this4.start();
+      }, 200);
     }
   }]);
 
