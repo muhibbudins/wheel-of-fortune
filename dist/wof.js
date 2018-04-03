@@ -1699,7 +1699,7 @@ var WheelOfFortune = function () {
     key: 'setKeyframe',
     value: function setKeyframe(maximumDegrees) {
       var styleEl = document.createElement('style'),
-          styleSheet;
+          styleSheet = void 0;
 
       // Append style element to head
       document.head.appendChild(styleEl);
@@ -1716,94 +1716,6 @@ var WheelOfFortune = function () {
         // WebKit
         styleSheet.insertRule('@-webkit-keyframes ' + rule, styleSheet.cssRules.length);
       }
-    }
-
-    /**
-     * Getter
-     */
-
-  }, {
-    key: 'getWinner',
-    value: function getWinner() {
-      var _this3 = this;
-
-      /**
-       * If winner algorithm using Probability Algorithm
-       */
-      if (this.probability) {
-        console.log('use probability');
-        var list = Array.from(this.pieces.map(function (item) {
-          return item.angle;
-        }));
-        var weight = Array.from(this.pieces.map(function (item) {
-          return item.prob;
-        }));
-        console.log(list, weight);
-
-        var generateWeighedList = function generateWeighedList(list, weight) {
-          var weighed_list = [];
-          var lastMultiple = 0;
-          var temporary = [];
-          var cycle = 0;
-
-          // Loop over weights
-          for (var i = 0; i < weight.length; i++) {
-            var multiples = weight[i] * 100;
-            var x = {};
-            x['index'] = i;
-            x['start'] = cycle > 1 ? lastMultiple - cycle : lastMultiple;
-            x['last'] = cycle > 1 ? lastMultiple + multiples - cycle : lastMultiple + multiples;
-
-            temporary.push(x);
-
-            lastMultiple = lastMultiple + multiples + 1;
-            cycle++;
-
-            // Loop over the list of items
-            for (var j = 0; j < multiples; j++) {
-              weighed_list.push(list[i]);
-            }
-          }
-
-          return {
-            weighed_list: weighed_list,
-            temporary: temporary
-          };
-        };
-
-        var generate = generateWeighedList(list, weight);
-
-        console.log(generate.temporary);
-        console.log(generate.weighed_list, generate.weighed_list.length);
-
-        var rand = function rand(min, max) {
-          return Math.floor(Math.random() * (max - min + 1)) + min;
-        };
-
-        var random_num = rand(0, generate.weighed_list.length);
-        console.log(random_num, generate.weighed_list[random_num]);
-
-        generate.temporary.map(function (item) {
-          if (item.start >= random_num && random_num <= item.last) {
-            console.log(item.index, _this3.pieces[item.index]);
-          }
-        });
-
-        return generate.weighed_list[random_num];
-      }
-
-      /**
-       * Use default random algorithm
-       */
-      else {
-          var sorted = _lodash2.default.orderBy(this.pieces, 'angle', 'desc');
-          var _list = Array.from(this.pieces.map(function (item) {
-            return item.angle;
-          })).sort().reverse();
-          var index = Math.floor(Math.random() * _list.length);
-
-          return sorted[index];
-        }
     }
 
     /**

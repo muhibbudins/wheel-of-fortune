@@ -109,7 +109,7 @@ export default class WheelOfFortune {
    * Setter
    */
   setKeyframe (maximumDegrees) {
-    var styleEl = document.createElement('style'),
+    let styleEl = document.createElement('style'),
         styleSheet;
   
     // Append style element to head
@@ -129,83 +129,6 @@ export default class WheelOfFortune {
         styleSheet.insertRule(`@keyframes ${rule}`, styleSheet.cssRules.length)
     } else if (CSSRule.WEBKIT_KEYFRAMES_RULE) { // WebKit
         styleSheet.insertRule(`@-webkit-keyframes ${rule}`, styleSheet.cssRules.length)
-    }
-  }
-
-  /**
-   * Getter
-   */
-  getWinner () {
-    /**
-     * If winner algorithm using Probability Algorithm
-     */
-    if (this.probability) {
-      console.log('use probability')
-      let list = Array.from(this.pieces.map(item => item.angle))
-      let weight = Array.from(this.pieces.map(item => item.prob))
-      console.log(list, weight)
-      
-      var generateWeighedList = function(list, weight) {
-        var weighed_list = [];
-        var lastMultiple = 0
-        let temporary = []
-        let cycle = 0
-          
-          // Loop over weights
-          for (var i = 0; i < weight.length; i++) {
-              var multiples = weight[i] * 100;
-              var x = {}
-              x['index'] = i
-              x['start'] = cycle > 1 ? lastMultiple - cycle : lastMultiple
-              x['last'] = cycle > 1 ? lastMultiple + multiples - cycle : lastMultiple + multiples
-
-              temporary.push(x)
-              
-              lastMultiple = lastMultiple + multiples + 1
-              cycle++
-
-              // Loop over the list of items
-              for (var j = 0; j < multiples; j++) {
-                  weighed_list.push(list[i]);
-              }
-          }
-          
-          return {
-            weighed_list: weighed_list,
-            temporary: temporary
-          };
-      };
-      
-      var generate = generateWeighedList(list, weight);
-      
-      console.log(generate.temporary)
-      console.log(generate.weighed_list, generate.weighed_list.length);
-
-      var rand = function(min, max) {
-          return Math.floor(Math.random() * (max - min + 1)) + min;
-      };
-      
-      var random_num = rand(0, generate.weighed_list.length);
-      console.log(random_num, generate.weighed_list[random_num]);
-
-      generate.temporary.map(item => {
-        if (item.start >= random_num && random_num <= item.last) {
-          console.log(item.index, this.pieces[item.index])
-        }
-      })
-
-      return generate.weighed_list[random_num]
-    }
-
-    /**
-     * Use default random algorithm
-     */
-    else {
-      let sorted = _.orderBy(this.pieces, 'angle', 'desc')
-      let list = Array.from(this.pieces.map(item => item.angle)).sort().reverse()
-      let index = Math.floor(Math.random() * list.length)
-  
-      return sorted[index]
     }
   }
 
