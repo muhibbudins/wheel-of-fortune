@@ -1628,12 +1628,20 @@ var WheelOfFortune = function () {
     }
 
     /**
+     * Set maximum spinning config
+     */
+    if (config.maximumSpin) {
+      this.maximumSpin = config.maximumSpin;
+    }
+
+    /**
      * Set default configuration
      */
     this.wheel = (0, _domtastic2.default)('.wof-wheel');
     this.degrees = 7200;
-    this.clicked = 0;
+    this.spinning = 0;
     this.playing = false;
+    this.ended = true;
 
     if (config.onFinish) {
       this.onFinish = config.onFinish;
@@ -1665,7 +1673,24 @@ var WheelOfFortune = function () {
      * Bind trigger to start wheel
      */
     (0, _domtastic2.default)('.wof-trigger').on('click', function () {
-      return _this.start();
+      if (_this.spinning === 0) {
+        _this.start();
+      }
+
+      if (_this.ended) {
+        /**
+         * If maximum spin is define
+         */
+        if (_this.maximumSpin && _this.spinning === _this.maximumSpin) {
+          _this.maximumWarning();
+          return false;
+        }
+
+        _this.destroy();
+        setTimeout(function () {
+          return _this.start();
+        }, 200);
+      }
     });
   }
 
@@ -1943,6 +1968,16 @@ var WheelOfFortune = function () {
     }
 
     /**
+     * Warning for maximum spinning
+     */
+
+  }, {
+    key: 'maximumWarning',
+    value: function maximumWarning() {
+      throw Error('Maximum spinning is ' + this.maximumSpin + 'x');
+    }
+
+    /**
      * Start Wheel
      */
 
@@ -1954,9 +1989,20 @@ var WheelOfFortune = function () {
       if (this.playing) {
         return false;
       } else {
-        (function () {
-          _this3.clicked++;
+        var _ret2 = function () {
+          /**
+           * If maximum spin is define
+           */
+          if (_this3.maximumSpin && _this3.spinning === _this3.maximumSpin) {
+            _this3.maximumWarning();
+            return {
+              v: false
+            };
+          }
+
+          _this3.spinning++;
           _this3.playing = true;
+          _this3.ended = false;
 
           var gift = _this3.getWinner(),
               angle = _this3.getAngle(gift),
@@ -1964,14 +2010,16 @@ var WheelOfFortune = function () {
               maximumDegrees = 7200 + angle;
 
           _this3.setKeyframe(maximumDegrees);
-
           _this3.wheel.addClass('wof-wheel_play');
+
           setTimeout(function () {
-            (0, _domtastic2.default)('.wof-winner').html(JSON.stringify(gift));
             _this3.onFinish(gift);
             _this3.playing = false;
+            _this3.ended = true;
           }, 10000);
-        })();
+        }();
+
+        if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
       }
     }
   }]);
@@ -27272,7 +27320,7 @@ exports = module.exports = __webpack_require__(54)(false);
 
 
 // module
-exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  z-index: 2000; }\n  .wof-pointer-top, .wof-pointer-bottom {\n    border-width: 60px 20px 0 20px;\n    border-color: #27c8f4 transparent transparent transparent;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%); }\n  .wof-pointer-right, .wof-pointer-left {\n    border-width: 20px 60px 20px 0;\n    border-color: transparent #27c8f4 transparent transparent;\n    right: 0;\n    top: 50%;\n    transform: translateY(-50%); }\n  .wof-pointer-bottom {\n    top: auto;\n    bottom: 0;\n    border-width: 0 20px 60px 20px;\n    border-color: transparent transparent #27c8f4 transparent; }\n  .wof-pointer-left {\n    right: auto;\n    left: 0;\n    border-width: 20px 0 20px 60px;\n    border-color: transparent transparent transparent #27c8f4; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n  .wof-wheel_play {\n    -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    -webkit-animation-fill-mode: forwards;\n    animation-fill-mode: forwards; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer; }\n", ""]);
+exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  z-index: 2000; }\n  .wof-pointer-top, .wof-pointer-bottom {\n    border-width: 30px 20px 0 20px;\n    border-color: #023a49 transparent transparent transparent;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%); }\n  .wof-pointer-right, .wof-pointer-left {\n    border-width: 20px 30px 20px 0;\n    border-color: transparent #023a49 transparent transparent;\n    right: 0;\n    top: 50%;\n    transform: translateY(-50%); }\n  .wof-pointer-bottom {\n    top: auto;\n    bottom: 0;\n    border-width: 0 20px 30px 20px;\n    border-color: transparent transparent #023a49 transparent; }\n  .wof-pointer-left {\n    right: auto;\n    left: 0;\n    border-width: 20px 0 20px 30px;\n    border-color: transparent transparent transparent #023a49; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n  .wof-wheel_play {\n    -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    -webkit-animation-fill-mode: forwards;\n    animation-fill-mode: forwards; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer; }\n", ""]);
 
 // exports
 

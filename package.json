@@ -4,7 +4,8 @@
   "description": "-",
   "main": "dist/wof.js",
   "scripts": {
-    "start": "webpack --watch"
+    "start": "webpack --watch",
+    "build": "uglifyjs ./dist/wof.js -c -m -o ./dist/wof.min.js --source-map ./dist/wof.min.js.map"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +27,8 @@
     "node-sass": "^4.8.3",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
-    "svg.js": "^2.6.4"
+    "svg.js": "^2.6.4",
+    "uglify-es": "^3.3.9",
+    "uglify-js": "^3.3.18"
   }
 }

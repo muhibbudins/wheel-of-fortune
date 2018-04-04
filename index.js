@@ -51,12 +51,20 @@ export default class WheelOfFortune {
     }
 
     /**
+     * Set maximum spinning config
+     */
+    if (config.maximumSpin) {
+      this.maximumSpin = config.maximumSpin
+    }
+
+    /**
      * Set default configuration
      */
     this.wheel = $('.wof-wheel')
     this.degrees = 7200
-    this.clicked = 0
+    this.spinning = 0
     this.playing = false
+    this.ended   = true
 
     if (config.onFinish) {
       this.onFinish = config.onFinish
@@ -85,7 +93,24 @@ export default class WheelOfFortune {
     /**
      * Bind trigger to start wheel
      */
-    $('.wof-trigger').on('click', () => this.start())
+    $('.wof-trigger').on('click', () => {
+      if (this.spinning === 0) {
+        this.start()
+      }
+      
+      if (this.ended) {
+        /**
+         * If maximum spin is define
+         */
+        if (this.maximumSpin && this.spinning === this.maximumSpin) {
+          this.maximumWarning()
+          return false
+        }
+        
+        this.destroy()
+        setTimeout(() => this.start(), 200)
+      }
+    })
   }
 
   /**
@@ -320,14 +345,30 @@ export default class WheelOfFortune {
   }
 
   /**
+   * Warning for maximum spinning
+   */
+  maximumWarning () {
+    throw Error(`Maximum spinning is ${this.maximumSpin}x`)
+  }
+
+  /**
    * Start Wheel
    */
   start () {
     if (this.playing) {
       return false
     } else {
-      this.clicked++
+      /**
+       * If maximum spin is define
+       */
+      if (this.maximumSpin && this.spinning === this.maximumSpin) {
+        this.maximumWarning()
+        return false
+      }
+
+      this.spinning++
       this.playing = true
+      this.ended   = false
   
       let gift = this.getWinner(),
           angle = this.getAngle(gift),
@@ -335,12 +376,12 @@ export default class WheelOfFortune {
           maximumDegrees = (7200 + angle);
   
       this.setKeyframe(maximumDegrees)
-      
       this.wheel.addClass('wof-wheel_play')
+
       setTimeout(() => {
-        $('.wof-winner').html(JSON.stringify(gift))
         this.onFinish(gift)
         this.playing = false
+        this.ended   = true
       }, 10000)
     }
   }

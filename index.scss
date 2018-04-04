@@ -13,16 +13,16 @@
 
     &-top,
     &-bottom {
-      border-width: 60px 20px 0 20px;
-      border-color: #27c8f4 transparent transparent transparent;
+      border-width: 30px 20px 0 20px;
+      border-color: #023a49 transparent transparent transparent;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
     }
     &-right,
     &-left {
-      border-width: 20px 60px 20px 0;
-      border-color: transparent #27c8f4 transparent transparent;
+      border-width: 20px 30px 20px 0;
+      border-color: transparent #023a49 transparent transparent;
       right: 0;
       top: 50%;
       transform: translateY(-50%);
@@ -30,14 +30,14 @@
     &-bottom {
       top: auto;
       bottom: 0;
-      border-width: 0 20px 60px 20px;
-      border-color: transparent transparent #27c8f4 transparent;
+      border-width: 0 20px 30px 20px;
+      border-color: transparent transparent #023a49 transparent;
     }
     &-left {
       right: auto;
       left: 0;
-      border-width: 20px 0 20px 60px;
-      border-color: transparent transparent transparent #27c8f4;
+      border-width: 20px 0 20px 30px;
+      border-color: transparent transparent transparent #023a49;
     }
   }
   &-wheel {

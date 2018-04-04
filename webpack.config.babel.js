@@ -2,10 +2,10 @@ const path = require('path');
 
 export default () => (
   {
-    entry: './index.js',
+    entry: "./index.js",
     output: {
       path: path.resolve(__dirname, './dist'),
-      filename: 'wof.js',
+      filename: "wof.js",
       libraryTarget: 'umd',
       libraryExport: 'default',
       library: 'WheelOfFortune'
@@ -15,11 +15,13 @@ export default () => (
       rules: [{
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel-loader"
+        use: {
+          loader: 'babel-loader'
+        }
       }, {
         test:/\.(s*)css$/,
         use: ['style-loader','css-loader', 'sass-loader']
       }]
-    },
+    }
   }
 );
