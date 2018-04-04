@@ -9,7 +9,7 @@
     height: 0;
     border-style: solid;
     position: absolute;
-    z-index: 2000;
+    z-index: 250;
 
     &-top,
     &-bottom {
@@ -58,7 +58,7 @@
     transform: translateY(-50%) translateX(-50%);
     background-color: #EDEDED;
     position: absolute;
-    z-index: 2000;
+    z-index: 250;
     display: flex;
     align-items: center;
     justify-content: center;
