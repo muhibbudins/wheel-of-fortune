@@ -1,8 +1,17 @@
 {
   "name": "wof",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Configurable wheel of fortune with specific angle, build with ES6, Webpack and SASS",
   "main": "src/index.js",
+  "npmName": "wof",
+  "npmFileMap": [
+    {
+      "basePath": "lib",
+      "files": [
+        "**/*"
+      ]
+    }
+  ],
   "scripts": {
     "build": "webpack --env dev && webpack --env build",
     "dev": "webpack --progress --colors --watch --env dev",
