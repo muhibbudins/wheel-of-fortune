@@ -63,15 +63,24 @@ export default class WheelOfFortune {
     this.playing = false;
     this.ended = true;
 
+    /**
+     * If onFinish event defined
+     */
     if (config.onFinish) {
       this.onFinish = config.onFinish;
     }
 
+    /**
+     * If startButton defined
+     */
     if (config.startButton) {
       this.startButton = config.startButton;
-      this.startButton.addEventListener('click', () => this.start(), false);
+      this.startButton.addEventListener('click', () => this.loopStart(), false);
     }
 
+    /**
+     * If resetButton defined
+     */
     if (config.resetButton) {
       this.resetButton = config.resetButton;
       this.resetButton.addEventListener('click', () => {
@@ -92,26 +101,7 @@ export default class WheelOfFortune {
      */
     let wofTrigger = document.querySelector('.wof-trigger');
 
-    wofTrigger.addEventListener('click', () => {
-      if (this.spinning === 0) {
-        return this.start();
-      }
-
-      if (this.ended) {
-        /**
-         * If maximum spin is define
-         */
-        if (this.maximumSpin && this.spinning === this.maximumSpin) {
-          this.maximumWarning();
-          return false;
-        }
-
-        this.destroy();
-        setTimeout(() => this.start(), 200);
-      }
-
-      return true;
-    }, false);
+    wofTrigger.addEventListener('click', () => this.loopStart(), false);
   }
 
   /**
@@ -150,7 +140,7 @@ export default class WheelOfFortune {
   /**
    * Set rotation animation
    */
-  setKeyframe(maximumDegrees) {
+  setKeyframe(degrees, time) {
     let styleEl = document.createElement('style'), styleSheet;
 
     // Append style element to head
@@ -161,14 +151,14 @@ export default class WheelOfFortune {
 
     let rule = `WOFAnimate {
       100% {
-        -webkit-transform: rotate(${ maximumDegrees }deg);
-                transform: rotate(${ maximumDegrees }deg);
+        -webkit-transform: rotate(${ degrees }deg);
+                transform: rotate(${ degrees }deg);
       }
     }`;
 
     let rule2 = `.wof-wheel_play {
-      -webkit-animation: WOFAnimate ${Math.floor(Math.random() * (10 - 1 + 1)) + 1}s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
-              animation: WOFAnimate ${Math.floor(Math.random() * (10 - 1 + 1)) + 1}s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+      -webkit-animation: WOFAnimate ${ time }s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+              animation: WOFAnimate ${ time }s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
       -webkit-animation-fill-mode: forwards;
               animation-fill-mode: forwards;
     }`;
@@ -281,15 +271,6 @@ export default class WheelOfFortune {
       };
 
       /**
-       * Get random number
-       * @param {Number} min
-       * @param {Number} max
-       */
-      let random = (min, max) => {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      };
-
-      /**
        * Get conversion of object weight probability
        */
       generate = convertToWeight(list, weight);
@@ -297,7 +278,7 @@ export default class WheelOfFortune {
       /**
        * Get random number by weight generated weight
        */
-      randomNum = random(0, generate.weight.length);
+      randomNum = this.getRandom(0, generate.weight.length);
 
       /**
        * Loop all temporary data
@@ -336,6 +317,15 @@ export default class WheelOfFortune {
   }
 
   /**
+   * Get random number
+   * @param {Number} min
+   * @param {Number} max
+   */
+  getRandom(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
+  /**
    * Calculate last rotation angle by pieces position
    * @param {Object} gift
    */
@@ -347,12 +337,22 @@ export default class WheelOfFortune {
     return (360 - (from + angle)) + (angle / 2) - this.caretPosition.angle;
   }
 
+  getAdditional() {
+    let degrees = this.getRandom(5, 10) * 360;
+    let time = this.getRandom(1, 4) + 8;
+
+    return {
+      degrees: degrees,
+      time: time
+    };
+  }
+
   /**
    * Destroy Wheel
    */
   destroy() {
     this.playing = false;
-    this.wheel.removeClass('wof-wheel_play');
+    this.wheel.classList.remove('wof-wheel_play');
   }
 
   /**
@@ -360,6 +360,30 @@ export default class WheelOfFortune {
    */
   maximumWarning() {
     throw Error(`Maximum spinning is ${this.maximumSpin}x`);
+  }
+
+  /**
+   * Loop start event
+   */
+  loopStart() {
+    if (this.spinning === 0) {
+      return this.start();
+    }
+
+    if (this.ended) {
+      /**
+       * If maximum spin is define
+       */
+      if (this.maximumSpin && this.spinning === this.maximumSpin) {
+        this.maximumWarning();
+        return false;
+      }
+
+      this.destroy();
+      setTimeout(() => this.start(), 200);
+    }
+
+    return true;
   }
 
   /**
@@ -387,16 +411,17 @@ export default class WheelOfFortune {
     this.ended = false;
 
     let gift = this.getWinner();
+    let additional = this.getAdditional();
     let angle = this.getAngle(gift);
-    let maximumDegrees = (7200 + angle);
+    let degrees = (this.degrees + additional.degrees + angle);
 
-    this.setKeyframe(maximumDegrees);
+    this.setKeyframe(degrees, additional.time);
     this.wheel.classList.add('wof-wheel_play');
 
     setTimeout(() => {
       this.onFinish(gift);
       this.playing = false;
       this.ended = true;
-    }, 10000);
+    }, (additional.time * 1000));
   }
 }
