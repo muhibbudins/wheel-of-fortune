@@ -1,6 +1,6 @@
 {
   "name": "wof",
-  "version": "1.0.2",
+  "version": "1.0",
   "description": "Configurable wheel of fortune with specific angle, build with ES6, Webpack and SASS",
   "main": "src/index.js",
   "scripts": {
