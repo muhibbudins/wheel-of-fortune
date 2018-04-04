@@ -1,0 +1,67 @@
+.wof {
+  &-wrapper {
+    position: relative;
+    width: 400px;
+    margin: 0 auto;
+  }
+  &-pointer {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    z-index: 2000;
+
+    &-top,
+    &-bottom {
+      border-width: 30px 20px 0 20px;
+      border-color: #023a49 transparent transparent transparent;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    &-right,
+    &-left {
+      border-width: 20px 30px 20px 0;
+      border-color: transparent #023a49 transparent transparent;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    &-bottom {
+      top: auto;
+      bottom: 0;
+      border-width: 0 20px 30px 20px;
+      border-color: transparent transparent #023a49 transparent;
+    }
+    &-left {
+      right: auto;
+      left: 0;
+      border-width: 20px 0 20px 30px;
+      border-color: transparent transparent transparent #023a49;
+    }
+  }
+  &-wheel {
+    width: 400px;
+    height: 400px;
+  
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+  &-trigger {
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    background-color: #EDEDED;
+    position: absolute;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}
