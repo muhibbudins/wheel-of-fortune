@@ -165,6 +165,13 @@ export default class WheelOfFortune {
       }
     }`
 
+    let rule2 = `.wof-wheel_play {
+      -webkit-animation: WOFAnimate ${Math.floor(Math.random() * (10 - 1 + 1)) + 1}s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+              animation: WOFAnimate ${Math.floor(Math.random() * (10 - 1 + 1)) + 1}s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
+      -webkit-animation-fill-mode: forwards;
+              animation-fill-mode: forwards;
+    }`
+
     /**
      * Insert keyframe by CSS Rule
      */
@@ -173,6 +180,7 @@ export default class WheelOfFortune {
     } else if (CSSRule.WEBKIT_KEYFRAMES_RULE) { // WebKit
         styleSheet.insertRule(`@-webkit-keyframes ${rule}`, styleSheet.cssRules.length)
     }
+    styleSheet.insertRule(`${rule2}`, styleSheet.cssRules.length)
   }
 
   /**

@@ -1758,6 +1758,8 @@ var WheelOfFortune = function () {
 
       var rule = 'WOFAnimate {\n      100% {\n        -webkit-transform: rotate(' + maximumDegrees + 'deg);\n                transform: rotate(' + maximumDegrees + 'deg);\n      }\n    }';
 
+      var rule2 = '.wof-wheel_play {\n      -webkit-animation: WOFAnimate ' + (Math.floor(Math.random() * (10 - 1 + 1)) + 1) + 's cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n              animation: WOFAnimate ' + (Math.floor(Math.random() * (10 - 1 + 1)) + 1) + 's cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n      -webkit-animation-fill-mode: forwards;\n              animation-fill-mode: forwards;\n    }';
+
       /**
        * Insert keyframe by CSS Rule
        */
@@ -1768,6 +1770,7 @@ var WheelOfFortune = function () {
         // WebKit
         styleSheet.insertRule('@-webkit-keyframes ' + rule, styleSheet.cssRules.length);
       }
+      styleSheet.insertRule('' + rule2, styleSheet.cssRules.length);
     }
 
     /**
@@ -27320,7 +27323,7 @@ exports = module.exports = __webpack_require__(54)(false);
 
 
 // module
-exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  z-index: 2000; }\n  .wof-pointer-top, .wof-pointer-bottom {\n    border-width: 30px 20px 0 20px;\n    border-color: #023a49 transparent transparent transparent;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%); }\n  .wof-pointer-right, .wof-pointer-left {\n    border-width: 20px 30px 20px 0;\n    border-color: transparent #023a49 transparent transparent;\n    right: 0;\n    top: 50%;\n    transform: translateY(-50%); }\n  .wof-pointer-bottom {\n    top: auto;\n    bottom: 0;\n    border-width: 0 20px 30px 20px;\n    border-color: transparent transparent #023a49 transparent; }\n  .wof-pointer-left {\n    right: auto;\n    left: 0;\n    border-width: 20px 0 20px 30px;\n    border-color: transparent transparent transparent #023a49; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n  .wof-wheel_play {\n    -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;\n    -webkit-animation-fill-mode: forwards;\n    animation-fill-mode: forwards; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer; }\n", ""]);
+exports.push([module.i, ".wof-wrapper {\n  position: relative;\n  width: 400px;\n  margin: 0 auto; }\n\n.wof-pointer {\n  width: 0;\n  height: 0;\n  border-style: solid;\n  position: absolute;\n  z-index: 2000; }\n  .wof-pointer-top, .wof-pointer-bottom {\n    border-width: 30px 20px 0 20px;\n    border-color: #023a49 transparent transparent transparent;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%); }\n  .wof-pointer-right, .wof-pointer-left {\n    border-width: 20px 30px 20px 0;\n    border-color: transparent #023a49 transparent transparent;\n    right: 0;\n    top: 50%;\n    transform: translateY(-50%); }\n  .wof-pointer-bottom {\n    top: auto;\n    bottom: 0;\n    border-width: 0 20px 30px 20px;\n    border-color: transparent transparent #023a49 transparent; }\n  .wof-pointer-left {\n    right: auto;\n    left: 0;\n    border-width: 20px 0 20px 30px;\n    border-color: transparent transparent transparent #023a49; }\n\n.wof-wheel {\n  width: 400px;\n  height: 400px; }\n  .wof-wheel img {\n    width: 100%;\n    height: auto; }\n\n.wof-trigger {\n  width: 100px;\n  height: 100px;\n  top: 50%;\n  left: 50%;\n  border-radius: 50%;\n  transform: translateY(-50%) translateX(-50%);\n  background-color: #EDEDED;\n  position: absolute;\n  z-index: 2000;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer; }\n", ""]);
 
 // exports
 

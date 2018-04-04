@@ -48,13 +48,6 @@
       width: 100%;
       height: auto;
     }
-
-    &_play {
-      -webkit-animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
-              animation: WOFAnimate 10s cubic-bezier(0.4, 0.2, 0, 1) 0s 1;
-      -webkit-animation-fill-mode: forwards;
-              animation-fill-mode: forwards;
-    }
   }
   &-trigger {
     width: 100px;
