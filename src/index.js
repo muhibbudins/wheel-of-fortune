@@ -233,7 +233,7 @@ export default class WheelOfFortune {
           * Loop all defining probability
           */
         for (let i = 0; i < weight.length; i++) {
-          multiples = weight[i] * 100;
+          multiples = weight[i];
 
           /**
             * Create temporary data
