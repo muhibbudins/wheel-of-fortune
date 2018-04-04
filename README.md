@@ -1,85 +1,51 @@
-# Webpack library starter
+# Wheel Of Fortune
 
-Webpack based boilerplate for producing libraries (Input: ES6, Output: universal library)
+This project will help you to create Wheel Of Fortune with specific angle and custom design, you can focus on creating wheel design and set a gift defining **Angle Size** and **From Angle**.
 
-![Travis](https://travis-ci.org/krasimir/webpack-library-starter.svg?branch=master)
+### Note of Rotation
 
-## Features
+![Rotation](example/assets/rotation.png)
 
-* Webpack 3 based.
-* ES6 as a source.
-* Exports in a [umd](https://github.com/umdjs/umd) format so your library works everywhere.
-* ES6 test setup with [Mocha](http://mochajs.org/) and [Chai](http://chaijs.com/).
-* Linting with [ESLint](http://eslint.org/).
+By default rotation origin of element on browser is like image above, so you can define a piece of wheel like example below.
 
-## Process
+### Piece example
 
-```
-ES6 source files
-       |
-       |
-    webpack
-       |
-       +--- babel, eslint
-       |
-  ready to use
-     library
-  in umd format
-```
+![Example](example/assets/example.png)
 
-*Have in mind that you have to build your library before publishing. The files under the `lib` folder are the ones that should be distributed.*
+If you create piece of wheel like image above, you can set the angle with **60** and from **0** because the piece location start on *0 degrees*.
 
-## Getting started
+### Set Winner Position
 
-1. Setting up the name of your library
-  * Open `webpack.config.js` file and change the value of `libraryName` variable.
-  * Open `package.json` file and change the value of `main` property so it matches the name of your library.
-2. Build your library
-  * Run `yarn install` (recommended) or `npm install` to get the project's dependencies
-  * Run `yarn build` or `npm run build` to produce minified version of your library.
-3. Development mode
-  * Having all the dependencies installed run `yarn dev` or `npm run dev`. This command will generate an non-minified version of your library and will run a watcher so you get the compilation on file change.
-4. Running the tests
-  * Run `yarn test` or `npm run test`
+To set position of winner on center of pointer so i use this formula :
 
-## Scripts
+> (360 - (Piece From + Piece Angle)) + (Piece Angle / 2) - 90
 
-* `yarn build` or `npm run build` - produces production version of your library under the `lib` folder
-* `yarn dev` or `npm run dev` - produces development version of your library and runs a watcher
-* `yarn test` or `npm run test` - well ... it runs the tests :)
-* `yarn test:watch` or `npm run test:watch` - same as above but in a watch mode
+### Image Support
 
-## Readings
+You can use JPG / PNG / SVG image to show a wheel, i use [svg.js](http://svgjs.com/) to load SVG image to wrapper.
 
-* [Start your own JavaScript library using webpack and ES6](http://krasimirtsonev.com/blog/article/javascript-library-starter-using-webpack-es6)
-
-## Misc
-
-### An example of using dependencies that shouldn’t be resolved by webpack, but should become dependencies of the resulting bundle
-
-In the following example we are excluding React and Lodash:
+### Documentation
 
 ```js
-{
-  devtool: 'source-map',
-  output: {
-    path: '...',
-    libraryTarget: 'umd',
-    library: '...'
-  },
-  entry: '...',
-  ...
-  externals: {
-    react: 'react'
-    // Use more complicated mapping for lodash.
-    // We need to access it differently depending
-    // on the environment.
-    lodash: {
-      commonjs: 'lodash',
-      commonjs2: 'lodash',
-      amd: '_',
-      root: '_'
-    }
-  }
-}
+  const WOF = new WheelOfFortune({
+    wheel: './assets/basic.svg',
+    caretPosition: 'top',
+    probability: true,
+    maximumSpin: 4,
+    pieces: [
+      { angle: 60, from: 300, gift: 'Gift 1', prob: .2 },
+      { angle: 40, from: 0, gift: 'Gift 2', prob: .05 },
+      { angle: 50, from: 40, gift: 'Gift 3', prob: .1 },
+      { angle: 45, from: 90, gift: 'Gift 4', prob: .15 },
+      { angle: 45, from: 135, gift: 'Gift 5', prob: .15 },
+      { angle: 90, from: 180, gift: 'Gift 6', prob: .3 },
+      { angle: 30, from: 270, gift: 'Gift 7', prob: .05 },
+    ],
+    onFinish: function(result) {
+      console.log(result)
+      document.querySelector('#result-winner').innerHTML = JSON.stringify(result)
+    },
+    startButton: document.getElementById('start-button'),
+    resetButton: document.getElementById('reset-button'),
+  });
 ```
