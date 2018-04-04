@@ -24,11 +24,15 @@
 </head>
 <body>
   <div class="demo">
+    
+    <!-- Wheel of Fortune Wrapper -->
     <div class="wof-wrapper">
       <div class="wof-pointer"></div>
       <div class="wof-wheel"></div>
       <div class="wof-trigger">START</div>
     </div>
+    <!-- Ending Wheel of Fortune Wrapper -->
+
     <div id="result-winner"></div>
     <br>
     <button id="start-button">Start Trigger</button>
@@ -37,11 +41,17 @@
   
   <script src="../lib/wof.js"></script>
   <script>
+    /**
+     * Wheel of fortune configuration
+     */
     const WOF = new WheelOfFortune({
+      // Image file
       wheel: './assets/basic.svg',
+      // Position of caret pointer
       caretPosition: 'top',
+      // If you want use probability alogirthm
       probability: true,
-      maximumSpin: 4,
+      // Configuration of pieces
       pieces: [
         { angle: 60, from: 300, gift: 'Gift 1', prob: 20 },
         { angle: 40, from: 0, gift: 'Gift 2', prob: 5 },
@@ -51,12 +61,17 @@
         { angle: 90, from: 180, gift: 'Gift 6', prob: 30 },
         { angle: 30, from: 270, gift: 'Gift 7', prob: 5 },
       ],
+      // Maximum spining
+      maximumSpin: 4,
+      // Set external start button
+      startButton: document.getElementById('start-button'),
+      // Set external reset button
+      resetButton: document.getElementById('reset-button'),
+      // Detect finish event
       onFinish: function(result) {
         console.log(result)
         document.querySelector('#result-winner').innerHTML = JSON.stringify(result)
-      },
-      startButton: document.getElementById('start-button'),
-      resetButton: document.getElementById('reset-button'),
+      }
     });
   </script>
 </body>
