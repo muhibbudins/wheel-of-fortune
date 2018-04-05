@@ -1,5 +1,14 @@
 # Wheel Of Fortune
 
+[![GitHub issues](https://img.shields.io/github/issues/muhibbudins/wheel-of-fortune.svg?style=flat-square)](https://github.com/muhibbudins/wheel-of-fortune/issues)
+
+[![GitHub forks](https://img.shields.io/github/forks/muhibbudins/wheel-of-fortune.svg?style=flat-square)](https://github.com/muhibbudins/wheel-of-fortune/network)
+
+[![GitHub stars](https://img.shields.io/github/stars/muhibbudins/wheel-of-fortune.svg?style=flat-square)](https://github.com/muhibbudins/wheel-of-fortune/stargazers)
+
+[![GitHub license](https://img.shields.io/github/license/muhibbudins/wheel-of-fortune.svg?style=flat-square)](https://github.com/muhibbudins/wheel-of-fortune/blob/master/LICENSE)
+
+
 This project will help you to create Wheel Of Fortune with specific angle and custom design, so you can focus to create a wheel design.
 
 ## Installation
