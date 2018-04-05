@@ -99,9 +99,13 @@ export default class WheelOfFortune {
     /**
      * Bind trigger to start wheel
      */
-    let wofTrigger = document.querySelector('.wof-trigger');
+    let disableTrigger = config.disableTrigger ? config.disableTrigger : false;
 
-    wofTrigger.addEventListener('click', () => this.loopStart(), false);
+    if (!disableTrigger) {
+      let wofTrigger = document.querySelector('.wof-trigger');
+
+      wofTrigger.addEventListener('click', () => this.loopStart(), false);
+    }
   }
 
   /**
