@@ -14,14 +14,6 @@ This project will help you to create Wheel Of Fortune with specific angle and cu
 
 Download from source on this [link](https://github.com/muhibbudins/wheel-of-fortune/tree/master/lib)
 
-#### Use CDN
-
-Insert this following code on your project file
-
-```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wof/1.0.1/wof.min.js"></script>
-```
-
 ### Documentation
 
 Example configuration
