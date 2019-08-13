@@ -2035,7 +2035,7 @@ var WheelOfFortune = function () {
      * Set default configuration
      */
     this.wheel = document.querySelector('.wof-wheel');
-    this.degrees = 720;
+    this.degrees = 3600;
     this.spinning = 0;
     this.playing = false;
     this.ended = true;
@@ -2272,7 +2272,7 @@ var WheelOfFortune = function () {
 
       return {
         degrees: degrees,
-        time: 4
+        time: 8
       };
     }
 

@@ -60,7 +60,7 @@ export default class WheelOfFortune {
      * Set default configuration
      */
     this.wheel = document.querySelector('.wof-wheel');
-    this.degrees = 720;
+    this.degrees = 3600;
     this.spinning = 0;
     this.playing = false;
     this.ended = true;
@@ -268,7 +268,7 @@ export default class WheelOfFortune {
 
     return {
       degrees: degrees,
-      time: 4
+      time: 8
     };
   }
 

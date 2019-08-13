@@ -12,7 +12,7 @@ context("Test", () => {
       Promise.all(
         Array.from(Array(101).keys()).map(() => {
           return new Promise(resolve => {
-            cy.wait(4500).then(() => {
+            cy.wait(8500).then(() => {
               cy.get(".wof-trigger").click();
 
               results.push(document.querySelector('#result-winner').innerText)

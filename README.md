@@ -12,7 +12,7 @@ This project will help you to create Wheel Of Fortune with specific angle and cu
 
 #### Manual Download 
 
-Download from source on this [link](https://github.com/muhibbudins/wheel-of-fortune/tree/master/lib)
+Download from source on this [link](https://github.com/muhibbudins/wheel-of-fortune/tree/master/build)
 
 ### Documentation
 
