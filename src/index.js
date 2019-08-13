@@ -1,6 +1,7 @@
 import axios from 'axios';
 import svg from 'svg.js';
-import _ from 'lodash';
+import chance from 'zero-chance';
+import orderBy from 'lodash/orderBy';
 import './index.scss';
 
 /**
@@ -11,7 +12,8 @@ let Pieces = {};
 /**
  * Wheel Of Fortune
  * Simple wheel of fortune with specific angle, build with ES6, Webpack and SASS
- * @version 1.0
+ *
+ * @version 2.0
  * @author Muhibbudin Suretno <muhibbudinsuretno1@gmail.com>
  * @license MIT
  * https://github.com/muhibbudins/wheel-of-fortune
@@ -58,7 +60,7 @@ export default class WheelOfFortune {
      * Set default configuration
      */
     this.wheel = document.querySelector('.wof-wheel');
-    this.degrees = 7200;
+    this.degrees = 720;
     this.spinning = 0;
     this.playing = false;
     this.ended = true;
@@ -215,98 +217,18 @@ export default class WheelOfFortune {
      * If winner algorithm using Probability Algorithm
      */
     if (this.probability) {
-      let list = Array.from(Pieces.map(item => item.angle));
-      let weight = Array.from(Pieces.map(item => item.prob));
-      let piece = [];
-      let generate;
-      let randomNum;
-
-      /**
-       * Convert object of weight probability to weighed array
-       * @param {Array} list
-       * @param {Array} weight
-       */
-      let convertToWeight = (list, weight) => {
-        let weighedList = [];
-        let lastMultiple = 0;
-        let temporary = [];
-        let cycle = 0;
-        let multiples;
-
-        /**
-          * Loop all defining probability
-          */
-        for (let i = 0; i < weight.length; i++) {
-          multiples = weight[i];
-
-          /**
-            * Create temporary data
-            */
-          let tempObject = {};
-
-          tempObject['index'] = i;
-          tempObject['start'] = cycle < 1 ? lastMultiple : lastMultiple + 1;
-          tempObject['last'] = lastMultiple + multiples;
-          tempObject['piece'] = Pieces[i];
-
-          temporary.push(tempObject);
-
-          /**
-            * Update piece position by multiplication
-            */
-          lastMultiple = lastMultiple + multiples;
-          cycle++;
-
-          /**
-            * Loop every probability by multiplication weight
-            */
-          for (let j = 0; j < multiples; j++) {
-            weighedList.push(list[i]);
-          }
-        }
-
-        /**
-          * Return weight and temporary data
-          */
-        return {
-          weight: weighedList,
-          temporary: temporary
-        };
-      };
-
-      /**
-       * Get conversion of object weight probability
-       */
-      generate = convertToWeight(list, weight);
-
-      /**
-       * Get random number by weight generated weight
-       */
-      randomNum = this.getRandom(0, generate.weight.length);
-
-      /**
-       * Loop all temporary data
-       */
-      generate.temporary.map(item => {
-        /**
-         * Get pieces by probability position
-         */
-        if (randomNum >= item.start && randomNum <= item.last) {
-          piece = item.piece;
-        }
+      const winner = chance(Pieces, {
+        detail: true
       });
 
-      /**
-       * Return piece
-       */
-      return piece;
+      return winner;
     }
 
     /**
      * Use default random algorithm
      */
 
-    let sorted = _.orderBy(Pieces, 'angle', 'desc');
+    let sorted = orderBy(Pieces, 'angle', 'desc');
     let list = Array.from(Pieces.map(item => item.angle)).sort().reverse();
 
     /**
@@ -342,12 +264,11 @@ export default class WheelOfFortune {
   }
 
   getAdditional() {
-    let degrees = this.getRandom(5, 10) * 360;
-    let time = this.getRandom(1, 4) + 8;
+    let degrees = this.getRandom(0, 1) * 360;
 
     return {
       degrees: degrees,
-      time: time
+      time: 4
     };
   }
 

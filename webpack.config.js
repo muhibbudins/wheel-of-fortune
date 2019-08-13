@@ -1,7 +1,6 @@
 /* global __dirname, require, module*/
 
-const webpack = require('webpack');
-const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
 const env = require('yargs').argv.env; // use --env with webpack 2
 const pkg = require('./package.json');
@@ -11,7 +10,7 @@ let libraryName = pkg.name;
 let plugins = [], outputFile;
 
 if (env === 'build') {
-  plugins.push(new UglifyJsPlugin({
+  plugins.push(new UglifyJSPlugin({
     sourceMap: true,
     uglifyOptions: {
       ecma: 8,
@@ -29,7 +28,7 @@ const config = {
   entry: __dirname + '/src/index.js',
   devtool: 'source-map',
   output: {
-    path: __dirname + '/lib',
+    path: __dirname + '/build',
     filename: outputFile,
     libraryTarget: 'umd',
     libraryExport: 'default',

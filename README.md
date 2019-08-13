@@ -28,13 +28,13 @@ Example configuration
     probability: true,
     // Configuration of pieces
     pieces: [
-      { angle: 60, from: 300, gift: 'Gift 1', prob: 20 },
-      { angle: 40, from: 0, gift: 'Gift 2', prob: 5 },
-      { angle: 50, from: 40, gift: 'Gift 3', prob: 10 },
-      { angle: 45, from: 90, gift: 'Gift 4', prob: 15 },
-      { angle: 45, from: 135, gift: 'Gift 5', prob: 15 },
-      { angle: 90, from: 180, gift: 'Gift 6', prob: 30 },
-      { angle: 30, from: 270, gift: 'Gift 7', prob: 5 },
+      { angle: 60, from: 300, gift: 'Gift 1', weight: 20 },
+      { angle: 40, from: 0, gift: 'Gift 2', weight: 5 },
+      { angle: 50, from: 40, gift: 'Gift 3', weight: 10 },
+      { angle: 45, from: 90, gift: 'Gift 4', weight: 15 },
+      { angle: 45, from: 135, gift: 'Gift 5', weight: 15 },
+      { angle: 90, from: 180, gift: 'Gift 6', weight: 30 },
+      { angle: 30, from: 270, gift: 'Gift 7', weight: 5 },
     ],
     // Maximum spining
     maximumSpin: 4,
