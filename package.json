@@ -60,7 +60,7 @@
     "mocha": "4.1.0",
     "node-sass": "4.12.0",
     "sass-loader": "6.0.7",
-    "style-loader": "0.20.3",
+    "style-loader": "0.23.1",
     "svg.js": "2.7.1",
     "uglifyjs-webpack-plugin": "1.3.0",
     "webpack": "3.12.0",
