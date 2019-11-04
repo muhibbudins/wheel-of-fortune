@@ -58,7 +58,7 @@
     "eslint-loader": "3.0.2",
     "lodash": "4.17.15",
     "mocha": "6.2.2",
-    "node-sass": "4.12.0",
+    "node-sass": "4.13.0",
     "sass-loader": "8.0.0",
     "style-loader": "1.0.0",
     "svg.js": "2.7.1",
