@@ -63,7 +63,7 @@
     "style-loader": "1.0.1",
     "svg.js": "2.7.1",
     "uglifyjs-webpack-plugin": "2.2.0",
-    "webpack": "4.41.3",
+    "webpack": "4.41.4",
     "yargs": "15.0.2",
     "zero-chance": "0.2.0"
   }
